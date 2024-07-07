@@ -20,6 +20,13 @@ const serviceApi = baseApi.injectEndpoints({
       providesTags: [tagTypes.SERVICES],
       keepUnusedDataFor:10
     }),
+    getService: build.query({
+      query: params => ({
+        url: `/services/${params}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, id) => [{ type: tagTypes.SERVICES, id }],
+    }),
   }),
 })
 

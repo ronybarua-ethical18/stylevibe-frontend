@@ -1,4 +1,4 @@
-import Service from '@/components/Services/Service'
+import Services from '@/components/Services/Services'
 import { Metadata } from 'next'
 import React from 'react'
 
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function ServicePage() {
   return (
     <>
-      <Service />
+      <Services />
     </>
   )
 }

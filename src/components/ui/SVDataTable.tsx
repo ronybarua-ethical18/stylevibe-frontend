@@ -43,9 +43,7 @@ const SVDataTable = ({
         selectedRows,
       )
     },
-    // getCheckboxProps: (record: any) => ({
-    //   name: record.name,
-    // }),
+
   }
 
   return (
@@ -58,6 +56,7 @@ const SVDataTable = ({
       dataSource={dataSource}
       pagination={paginationConfig}
       onChange={onTableChange}
+      rowKey={(record) => record?._id}
     />
   )
 }
