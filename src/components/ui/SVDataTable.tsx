@@ -57,6 +57,7 @@ const SVDataTable = ({
       pagination={paginationConfig}
       onChange={onTableChange}
       rowKey={(record) => record?._id}
+      
     />
   )
 }

@@ -23,11 +23,11 @@ export default function Services() {
   const [searchTerm, setSearchTerm] = React.useState('')
   const [pageNumber, setPageNumber] = React.useState(1)
   const [limit, setLimit] = React.useState(10)
-  
+
   const router = useRouter()
   const pathname = usePathname()
 
-  console.log("pathname", pathname)
+  console.log('pathname', pathname)
 
   const handlePageChange = (page: number, pageSize: number) => {
     setPageNumber(page)
@@ -50,9 +50,9 @@ export default function Services() {
     {
       title: 'Service name',
       dataIndex: 'name',
-      render: (name:string, record:any) => (
+      render: (name: string, record: any) => (
         <span
-          className="cursor-pointer text-blue-600 hover:underline"
+          className="cursor-pointer"
           onClick={() => router.push(`/seller/services/${record?._id}`)}
         >
           {name}
@@ -70,32 +70,34 @@ export default function Services() {
     {
       title: 'Price',
       dataIndex: 'price',
-      render: (price:number) => `$${price.toFixed(2)}`,
+      render: (price: number) => `$${price.toFixed(2)}`,
     },
     {
       title: 'Shop name',
-      render: (record:any) => record?.shop?.shopName,
+      render: (record: any) => record?.shop?.shopName,
     },
     {
       title: 'Availability',
       dataIndex: 'availability',
-      render: (availability:boolean) => (availability ? 'Available' : 'N/A'),
+      render: (availability: boolean) => (availability ? 'Available' : 'N/A'),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       align: 'center',
-      render: (status:string) => <SVStatusChip status={transformingText(status)} />,
+      render: (status: string) => (
+        <SVStatusChip status={transformingText(status)} />
+      ),
     },
     {
       title: 'Action',
       align: 'right',
-      render: (record:any) => (
+      render: (record: any) => (
         <div className="flex justify-end">
           <div className="flex align-baseline">
             <IoEyeOutline
               className="mr-2 text-xl cursor-pointer"
-              onClick={() => router.push(`/services/${record.id}`)}
+              onClick={() => router.push(`/seller/services/${record._id}`)}
             />
             <SVModal width="800px" content={<CreateService data={record} />} />
             <IoTrashOutline className="text-xl cursor-pointer ml-2" />
@@ -105,13 +107,11 @@ export default function Services() {
     },
   ]
 
-  const userDetails:any = getUserInfo()
+  const userDetails: any = getUserInfo()
 
   return (
     <div>
-      <SVBreadCrumb
-        items={getBreadcrumbItems(userDetails?.role, "services")}
-      />
+      <SVBreadCrumb items={getBreadcrumbItems(userDetails?.role, 'services')} />
       <SVPageHeading
         modalContent={
           <>

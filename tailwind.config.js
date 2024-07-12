@@ -29,8 +29,8 @@ module.exports = {
         'review-card': '0% 15% 0% 0% / 0% 15% 0% 0%',
       },
       fontSize: {
-        '2xs': '0.625rem',  // 10px
-      }
+        '2xs': '0.625rem', // 10px
+      },
     },
   },
   plugins: [],

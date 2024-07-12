@@ -18,7 +18,7 @@ const serviceApi = baseApi.injectEndpoints({
         params: params,
       }),
       providesTags: [tagTypes.SERVICES],
-      keepUnusedDataFor:10
+      keepUnusedDataFor: 10,
     }),
     getService: build.query({
       query: params => ({
@@ -30,4 +30,8 @@ const serviceApi = baseApi.injectEndpoints({
   }),
 })
 
-export const { useCreateServiceMutation, useGetServicesQuery } = serviceApi
+export const {
+  useCreateServiceMutation,
+  useGetServicesQuery,
+  useGetServiceQuery,
+} = serviceApi

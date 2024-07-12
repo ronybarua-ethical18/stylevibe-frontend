@@ -8,19 +8,18 @@ import SVTopbar from './SVTopbar'
 const { Content } = Layout
 
 export default function Contents({ children }: { children: React.ReactNode }) {
-  const loggedUser = 'seller'
   return (
     <Content
       style={{
         minHeight: '100vh',
-        margin: '30px',
+        padding: '100px 30px 30px 30px',
         color: 'black',
-        marginTop: '100px',
+        background: '#f6f5fb',
       }}
     >
       <SVTopbar />
 
-      {children}
+      <div>{children}</div>
     </Content>
   )
 }

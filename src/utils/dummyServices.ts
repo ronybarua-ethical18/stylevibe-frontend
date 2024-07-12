@@ -208,3 +208,126 @@ export const dummyBlogs = [
     createdAt: '2024-03-02',
   },
 ]
+
+export const reviews = [
+  {
+    id: 1,
+    user: {
+      firstName: 'Client',
+      lastName: 'One',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 5,
+    comment: 'The service is too satisfying',
+    date: '2023-07-01T10:15:30Z',
+  },
+  {
+    id: 2,
+    user: {
+      firstName: 'Client',
+      lastName: 'Two',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 4,
+    comment: 'Great service, will come again!',
+    date: '2023-07-02T12:45:00Z',
+  },
+  {
+    id: 3,
+    user: {
+      firstName: 'Client',
+      lastName: 'Three',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 3,
+    comment: 'Good service but room for improvement.',
+    date: '2023-07-03T14:30:15Z',
+  },
+  {
+    id: 4,
+    user: {
+      firstName: 'Client',
+      lastName: 'Four',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 5,
+    comment: 'Excellent service and friendly staff.',
+    date: '2023-07-04T09:00:45Z',
+  },
+  {
+    id: 5,
+    user: {
+      firstName: 'Client',
+      lastName: 'Five',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 4,
+    comment: 'Very satisfied with the service.',
+    date: '2023-07-05T16:20:30Z',
+  },
+  {
+    id: 6,
+    user: {
+      firstName: 'Client',
+      lastName: 'Six',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 2,
+    comment: 'Service was below expectations.',
+    date: '2023-07-06T11:55:05Z',
+  },
+  {
+    id: 7,
+    user: {
+      firstName: 'Client',
+      lastName: 'Seven',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 4,
+    comment: 'Good service overall.',
+    date: '2023-07-07T08:40:20Z',
+  },
+  {
+    id: 8,
+    user: {
+      firstName: 'Client',
+      lastName: 'Eight',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 5,
+    comment: 'Exceptional service!',
+    date: '2023-07-08T14:10:10Z',
+  },
+  {
+    id: 9,
+    user: {
+      firstName: 'Client',
+      lastName: 'Nine',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 3,
+    comment: 'Service was okay, nothing special.',
+    date: '2023-07-09T17:35:25Z',
+  },
+  {
+    id: 10,
+    user: {
+      firstName: 'Client',
+      lastName: 'Ten',
+      role: 'Customer',
+      img: 'https://u-send.s3.eu-west-2.amazonaws.com/1708325014999-064a0dde-658f-4d28-a9b0-6df657a0a5d7.jpg',
+    },
+    rating: 1,
+    comment: 'Very disappointed with the service.',
+    date: '2023-07-10T19:50:50Z',
+  },
+]

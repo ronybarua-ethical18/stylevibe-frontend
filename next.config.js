@@ -7,6 +7,7 @@ const nextConfig = {
       'theruggedbros.com',
       'm.media-amazon.com',
       'i.pinimg.com',
+      'u-send.s3.eu-west-2.amazonaws.com'
     ],
   },
 }

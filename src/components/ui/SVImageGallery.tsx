@@ -1,15 +1,17 @@
+"use client"
+
 import React from "react";
 import ImageGallery from "react-image-gallery";
 // import PlaceHolderImage from "../../../../assets/placeholder.jpg"
 
-export default function ProductImageGallery({ singleProduct }:any) {
+export default function SVImageGallery({ imageList }:any) {
   const images:any = [];
-  singleProduct?.images?.forEach((image:any) => {
+
+  console.log("img from sb", imageList)
+  imageList?.forEach((image:any) => {
     const img = {
-      original: image.src,
-      thumbnail: image.src,
-      // originalHeight: "350px",
-      thumbnailHeight: "90px"
+      original: image.img,
+      thumbnail: image.img,
      };
     images.push(img);
   });
@@ -25,8 +27,10 @@ export default function ProductImageGallery({ singleProduct }:any) {
           }}
           indexSeparator="false"
           showNav={false}
-          autoPlay={false}
+          autoPlay={true}
           items={images}
+          lazyLoad
+          useTranslate3D
           // useBrowserFullscreen={false}
           showPlayButton={false}
           showFullscreenButton={true}
