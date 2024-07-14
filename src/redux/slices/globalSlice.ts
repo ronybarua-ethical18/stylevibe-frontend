@@ -12,16 +12,15 @@ const globalSlice = createSlice({
   name: 'global',
   initialState,
   reducers: {
-    showModal(state, {payload}) {
+    showModal(state, { payload }) {
       state.isModalOpen = payload
-
     },
-    closeModal(state, {payload}) {
+    closeModal(state, { payload }) {
       state.isModalOpen = payload
     },
   },
 })
 
 export const { showModal, closeModal } = globalSlice.actions
-export const globalSelector = (state:any) => state.global;
+export const globalSelector = (state: any) => state.global
 export default globalSlice.reducer

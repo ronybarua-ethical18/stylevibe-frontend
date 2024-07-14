@@ -17,6 +17,7 @@ import SVModal from '../ui/SVModal'
 import { usePathname, useRouter } from 'next/navigation'
 import { getUserInfo } from '@/services/auth.service'
 import { getBreadcrumbItems } from '@/utils/getBreadcumItems'
+import SVConfirmationModal from '../ui/SVConfirmationModal'
 
 export default function Services() {
   const [activeTab, setActiveTab] = React.useState<SegmentedValue>('1')
@@ -100,7 +101,7 @@ export default function Services() {
               onClick={() => router.push(`/seller/services/${record._id}`)}
             />
             <SVModal width="800px" content={<CreateService data={record} />} />
-            <IoTrashOutline className="text-xl cursor-pointer ml-2" />
+            <SVConfirmationModal buttonTitle='Confirm' item={record}  func={() =>{console.log("test")}}/>
           </div>
         </div>
       ),

@@ -45,12 +45,16 @@ const SVModal = ({
         // title={modalTitle}
         // mask={false}
         width={width}
+        centered
         className=""
         open={isModalOpen}
         footer={null}
         onCancel={() => dispatch(closeModal(false))}
+       
+        maskStyle={{background:"rgba(0,0,0,0.09)"}}
+        maskAnimation={true}
       >
-        <div className=" overflow-y-scroll no-scrollbar">{content}</div>
+        <div className=" overflow-y-scroll no-scrollbar"  style={{height:"90%"}}>{content}</div>
       </Modal>
     </div>
   )

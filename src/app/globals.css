@@ -68,7 +68,4 @@ h1,h2,h3,h4,h5,h6{
     scrollbar-width: none;  /* Firefox */
   }
 
-  .ant-modal-mask {
-    background-color: rgba(0, 0, 0, 0.45) !important;  /* Adjust opacity as needed */
-  }
 

@@ -39,7 +39,7 @@ const LoginPage = () => {
       }
       storeUserInfo(res?.data?.accessToken)
     } catch (err: any) {
-      message.error(err)
+      message.error(err.message)
       console.log(err.message)
     }
   }
