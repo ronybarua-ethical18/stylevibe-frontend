@@ -10,14 +10,15 @@ interface IModal {
   modalTitle?: string
   buttonTitle?: string
   width?: string | number
-  func?: () => void // Changed to a function type
+  func?: () => Promise<void> // Changed to a function type
   item: any
+  isLoading?: boolean
 }
 
 const SVConfirmationModal = ({
   func,
   buttonTitle = 'Confirm',
-  item = {},
+  isLoading,
 }: IModal): ReactNode => {
   const [open, setOpen] = useState(false)
 
@@ -45,24 +46,37 @@ const SVConfirmationModal = ({
         <div className="pt-6 pb-0 px-2">
           <div className="flex items-start">
             <FaRegTrashAlt className="text-3xl mr-5 text-[#f0424c] mt-1 font-semibold" />
-           <div>
-           <p className="text-lg font-light m-0">
-             Are you sure you want to <span className='font-medium'>delete the item?</span> This cannot be undone.
-            </p>
-           </div>
+            <div>
+              <p className="text-lg font-light m-0">
+                Are you sure you want to{' '}
+                <span className="font-medium">delete the item?</span> This
+                cannot be undone.
+              </p>
+            </div>
           </div>
           <div className="flex justify-end mt-10">
             <SVButton
               title="Cancel"
-              type="primary"
-              style={{ background: '#fff', color:"#000", marginRight:"15px", borderRadius: '10px' }}
+              type="text"
+              style={{
+                // background: '#fff',
+                color: '#000',
+                marginRight: '15px',
+                borderRadius: '10px',
+              }}
               onClick={handleCloseModal}
             />
             <SVButton
               title={buttonTitle}
+              disabled={isLoading}
               type="primary"
               style={{ background: '#f0424c', borderRadius: '10px' }}
-              onClick={func}
+              onClick={() => {
+                func!()
+                if (!isLoading) {
+                  handleCloseModal()
+                }
+              }}
             />
           </div>
         </div>

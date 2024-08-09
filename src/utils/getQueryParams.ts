@@ -1,6 +1,6 @@
 export const getQueryParams = (
   pageNumber: number = 1,
-  limit: number = 10,
+  limit: number = 50,
   debouncedSearchTerm: string = '',
   activeTab: any = '1',
 ) => {

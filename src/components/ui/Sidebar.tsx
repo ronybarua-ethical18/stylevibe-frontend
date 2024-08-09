@@ -49,7 +49,7 @@ export default function Sidebar(): React.ReactNode {
         <MdOutlineAdminPanelSettings
           style={{ marginRight: '10px', color: '#6a9cff' }}
         />
-        Seller
+        {role}
       </div>
       <Menu
         style={{ background: 'white', color: '#151b20' }}

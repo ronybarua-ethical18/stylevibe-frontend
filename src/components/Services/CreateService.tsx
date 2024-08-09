@@ -1,5 +1,5 @@
 import { Button, Col, Row, message } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import FormInput from '../Forms/FormInput'
 import Form from '../Forms/Form'
 import FormSelectField from '../Forms/FormSelectField'
@@ -20,12 +20,19 @@ type FormValues = {
   images: string[]
 }
 
-export default function CreateService({ data }: any) {
+export default function CreateService({ savedData }: any) {
+  
   const [images, setImages] = useState([])
   const [createService] = useCreateServiceMutation()
   const dispatch = useDispatch()
 
-  console.log("data from create service", data)
+  const [incomingData, setIncomingData] = useState(savedData || {})
+
+  useEffect(() => {
+    setIncomingData(savedData || {})
+  }, [savedData])
+
+  console.log("data from create service", savedData)
 
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
@@ -52,7 +59,7 @@ export default function CreateService({ data }: any) {
                 placeholder="Enter service name"
                 type="text"
                 label="Name"
-                defaultValue={data?.name}
+                defaultValue={incomingData?.name || ""}
               />
             </Col>
             <Col className="gutter-row" span={12}>
@@ -61,6 +68,7 @@ export default function CreateService({ data }: any) {
                 placeholder="Enter service price"
                 type="number"
                 label="Price"
+                defaultValue={incomingData?.price || ""}
               />
             </Col>
             <Col className="gutter-row" span={12}>
@@ -69,6 +77,7 @@ export default function CreateService({ data }: any) {
                 options={SERVICE_CATEGORIES}
                 placeholder="Select"
                 label="Select Category"
+                defaultValue={incomingData?.category || ""}
               />
             </Col>
             <Col className="gutter-row" span={12}>
@@ -77,6 +86,7 @@ export default function CreateService({ data }: any) {
                 options={SERVICE_SUB_CATEGORIES}
                 placeholder="Select"
                 label="Select Category"
+                defaultValue={incomingData?.subCategory}
               />
             </Col>
             <Col className="gutter-row" span={24}>
@@ -84,6 +94,7 @@ export default function CreateService({ data }: any) {
                 name="description"
                 placeholder="Write Description"
                 label="Description"
+                defaultValue={incomingData?.description}
               />
             </Col>
             <Col className="gutter-row" span={24}>

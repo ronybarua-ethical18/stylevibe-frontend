@@ -4,10 +4,12 @@ import { UserOutlined, BellOutlined } from '@ant-design/icons'
 import React from 'react'
 import { removeUserInfo } from '@/utils/handleLocalStorage'
 import { authKey } from '@/constants/authKey'
+import { getUserInfo } from '@/services/auth.service'
 
 export default function SVTopbar() {
   const router = useRouter()
-  const logOut = () => {
+  const userDetails:any = getUserInfo()
+    const logOut = () => {
     removeUserInfo(authKey)
     router.push('/login')
   }
@@ -50,7 +52,7 @@ export default function SVTopbar() {
         </Dropdown>
 
         <div>
-          <h5 style={{ margin: 0, fontSize: '14px' }}>John Smith</h5>
+          <h5 style={{ margin: 0, fontSize: '14px' }}>{userDetails?.firstName + " "+ userDetails?.lastName}</h5>
           <h6
             style={{
               margin: 0,
@@ -59,7 +61,7 @@ export default function SVTopbar() {
               textAlign: 'left',
             }}
           >
-            Seller
+            {userDetails?.role}
           </h6>
         </div>
       </div>

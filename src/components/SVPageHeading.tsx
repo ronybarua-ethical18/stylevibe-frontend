@@ -5,7 +5,6 @@ interface IPageHeading {
   pageTitle: string
   numberOfItems: string
   pageSubTitle: string
-  modalContent?: React.ReactNode
   modalTitle?: string
   buttonTitle?: string
   width?:string | number
@@ -15,7 +14,6 @@ export default function SVPageHeading({
   pageTitle,
   numberOfItems,
   pageSubTitle,
-  modalContent,
   modalTitle,
   buttonTitle,
   width
@@ -41,7 +39,6 @@ export default function SVPageHeading({
       </div>
       {modalTitle && buttonTitle && (
         <SVModal
-          content={<>{modalContent}</>}
           buttonTitle={buttonTitle}
           width={width}
         />

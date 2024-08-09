@@ -1,32 +1,37 @@
-export const getBreadcrumbItems = (role: string, page: string, id?: string) => {
+import { getUserInfo } from '@/services/auth.service'
+
+export const getBreadcrumbItems = (page: string, id?: string) => {
+  const userDetails: any = getUserInfo()
+
+  console.log('user detaiils from breadcumb', userDetails)
   const breadcrumbItems = []
 
-  // Construct URL based on role, page, and id
-  const url = `/${role}/${page}/${id}`
+  // Construct URL based on userDetails?.role, page, and id
+  const url = `/${userDetails?.role}/${page}/${id}`
 
   // Check if there's an ID in the URL
   if (id) {
     breadcrumbItems.push({
-      label: role,
-      link: `/${role}`,
+      label: userDetails?.role,
+      link: `/${userDetails?.role}`,
     })
     breadcrumbItems.push({
       label: page,
-      link: `/${role}/${page}`,
+      link: `/${userDetails?.role}/${page}`,
     })
     breadcrumbItems.push({
       label: id,
-      link: `/${role}/${page}/${id}`,
+      link: `/${userDetails?.role}/${page}/${id}`,
     })
   } else {
     // If no ID provided, construct breadcrumbs without ID
     breadcrumbItems.push({
-      label: role,
-      link: `/${role}`,
+      label: userDetails?.role,
+      link: `/${userDetails?.role}`,
     })
     breadcrumbItems.push({
       label: page,
-      link: `/${role}/${page}`,
+      link: `/${userDetails?.role}/${page}`,
     })
   }
 

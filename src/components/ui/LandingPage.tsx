@@ -18,13 +18,17 @@ import SVHeaderCarousel from './SVHeaderCarousel'
 import AuthButton from '@/app/components/AuthButton'
 import { getUserInfo } from '@/services/auth.service'
 import { BiLogOut } from 'react-icons/bi'
-import { clearLocalStorage, removeUserInfo } from '@/utils/handleLocalStorage'
+import { removeUserInfo } from '@/utils/handleLocalStorage'
 import { authKey } from '@/constants/authKey'
+import { useGetTopServicesQuery } from '@/redux/api/services'
 
 export default function LandingPage() {
   const userInfo: any = getUserInfo()
   const role = userInfo?.role
   const router = useRouter()
+  const { data: services, isLoading: servicesLoading } = useGetTopServicesQuery({})
+
+  console.log("top services from layout", services?.data)
 
   return (
     <div>
@@ -78,7 +82,7 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
-      <SVServiceCard />
+      <SVServiceCard services={services?.data} loading={servicesLoading}/>
       <SVHowItWorks />
       <SVTypesOfServices />
       <SVTotalClients />

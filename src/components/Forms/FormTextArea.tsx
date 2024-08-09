@@ -18,7 +18,8 @@ interface ITextInput {
     style?:object
     maxLength?:number,
     rows?:number,
-    handleChange?: (el: string) => void
+    handleChange?: (el: string) => void,
+    defaultValue?:string
   }
 
 const FormTextArea = ({
@@ -28,7 +29,8 @@ const FormTextArea = ({
   label,
   handleChange,
   maxLength=200,
-  rows=4
+  rows=4,
+  defaultValue
 }: ITextInput) => {
   const { control } = useFormContext()
 
@@ -45,7 +47,7 @@ const FormTextArea = ({
             maxLength={maxLength}
             value={value}
             onChange={onChange}
-            
+            defaultValue={defaultValue}
           />
         )}
       />

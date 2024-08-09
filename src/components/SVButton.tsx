@@ -11,7 +11,9 @@ interface IButton {
   style?: object
   size?: SizeType
   onClick?: any
-  className?:any
+  className?: any
+  disabled?: any
+  icon?: any
 }
 export default function SVButton({
   type,
@@ -19,15 +21,19 @@ export default function SVButton({
   title,
   style,
   onClick,
-  className
+  className,
+  disabled,
+  icon,
 }: IButton): React.ReactNode {
   return (
     <Button
+      icon={icon}
       type={type || 'primary'}
       size={size || 'large'}
       style={{ ...style, fontSize: '12px' }}
       className={className}
       onClick={onClick}
+      disabled={disabled}
     >
       {title}
     </Button>

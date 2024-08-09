@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import { Modal } from 'antd'
 import SVButton from '../SVButton'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,31 +10,49 @@ import {
   showModal,
 } from '@/redux/slices/globalSlice'
 import { LiaEdit } from 'react-icons/lia'
+import { usePathname } from 'next/navigation'
+import CreateService from '../Services/CreateService'
 
 interface IModal {
-  content: ReactElement<{ closeModal: () => void }>
   modalTitle?: string
   buttonTitle?: string
   width?: string | number
+  data?: any
+  isOpen?: boolean
+  setSelectedRecord?: any
 }
 
 const SVModal = ({
-  content,
   buttonTitle,
   width,
+  data,
+  setSelectedRecord,
 }: IModal): ReactNode => {
   const { isModalOpen } = useSelector(globalSelector)
   const dispatch = useDispatch()
+  const pathname = usePathname()
+  const adminPath = pathname === '/admin/services'
+  
+
+  const renderContent = (): any => {
+    if (pathname === '/seller/services' || data) {
+      if(data){
+        return <CreateService savedData={data} />
+      }
+      return <CreateService  />
+    } else {
+      return <>Different modal content</>
+    }
+  }
 
   return (
     <div>
-      {buttonTitle ? (
-         <SVButton
-         type="primary"
-         title={buttonTitle}
-         onClick={() => dispatch(showModal(true))}
-       />
-       
+      {adminPath && buttonTitle === "Create service" ? <></>:buttonTitle ? (
+        <SVButton
+          type="primary"
+          title={buttonTitle}
+          onClick={() => dispatch(showModal(true))}
+        />
       ) : (
         <LiaEdit
           className="text-xl cursor-pointer"
@@ -42,19 +60,27 @@ const SVModal = ({
         />
       )}
       <Modal
-        // title={modalTitle}
-        // mask={false}
         width={width}
         centered
-        className=""
         open={isModalOpen}
         footer={null}
-        onCancel={() => dispatch(closeModal(false))}
-       
-        maskStyle={{background:"rgba(0,0,0,0.09)"}}
+        onCancel={() => {
+          setSelectedRecord(null)
+          dispatch(closeModal(false))
+        }}
+        onClose={() => {
+          setSelectedRecord(null)
+          dispatch(closeModal(false))
+        }}
+        maskStyle={{ background: 'rgba(0,0,0,0.09)' }}
         maskAnimation={true}
       >
-        <div className=" overflow-y-scroll no-scrollbar"  style={{height:"90%"}}>{content}</div>
+        <div
+          className="overflow-y-scroll no-scrollbar"
+          style={{ height: '90%' }}
+        >
+          {renderContent()}
+        </div>
       </Modal>
     </div>
   )

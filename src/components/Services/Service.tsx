@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import SVBreadCrumb from '../ui/SVBreadCrumb'
 import { getBreadcrumbItems } from '@/utils/getBreadcumItems'
@@ -11,22 +12,21 @@ import { IoLockClosedOutline } from 'react-icons/io5'
 import SVButton from '../SVButton'
 import RatingBar from '../ui/SVRatingBar'
 import SVReviews from './components/SVReviews'
+import Loading from '@/app/loading'
 
-export default function Service({ service }: any) {
+export default function Service({ service, loading, role }: any) {
   const ratings = [300, 100, 50, 35, 15]
   return (
     <div>
       {!service ? (
-        'Loading'
+        <Loading />
       ) : (
         <div>
-          <SVBreadCrumb
-            items={getBreadcrumbItems(
-              'seller',
-              'services',
-              service?.data?.name,
-            )}
-          />
+          {!role && (
+            <SVBreadCrumb
+              items={getBreadcrumbItems('services', service?.shop?.shopName)}
+            />
+          )}
           <div className="bg-white mt-5 p-8">
             <Row gutter={16}>
               <Col
@@ -35,29 +35,18 @@ export default function Service({ service }: any) {
                 style={{ height: 'inherit' }}
               >
                 <div>
-                  <SVImageGallery
-                    imageList={[
-                      {
-                        img: 'https://cdn.shopify.com/s/files/1/0548/7712/6813/products/1617192889008_0.jpg?v=1634485399',
-                      },
-                      {
-                        img: 'https://cdn.shopify.com/s/files/1/0548/7712/6813/products/1617192889015_3.jpg?v=1634485400',
-                      },
-                    ]}
-                  />
+                  <SVImageGallery imageList={service?.images} />
                 </div>
               </Col>
               <Col className="gutter-row" span={14}>
                 <div className="ml-5">
                   <div>
-                    <h1 className="text-3xl mt-0">{service?.data?.name}</h1>
+                    <h1 className="text-3xl mt-0">{service?.name}</h1>
                     <h3 className="text-base font-light">
-                      {service?.data?.category +
-                        ' / ' +
-                        service?.data?.subCategory}
+                      {service?.category + ' / ' + service?.subCategory}
                     </h3>
                     <p className="text-lg font-thin mt-5">
-                      {service?.data?.description}
+                      {service?.description}
                     </p>
                   </div>
                   <div className="flex justify-between  items-center">
@@ -73,7 +62,7 @@ export default function Service({ service }: any) {
                       </div>
                       <div>
                         <h1 className="text-3xl font-medium mb-1 text-[#6a9cff]">
-                          ${service?.data?.price + '.00'}
+                          ${service?.price + '.00'}
                         </h1>
                         <p className="font-thin">
                           0.15 % vat will be added extra
@@ -85,30 +74,30 @@ export default function Service({ service }: any) {
                         <CiShop className="text-base mr-3" />
 
                         <h1 className="text-base font-normal my-0">
-                          {service?.data?.shop?.shopName}
+                          {service?.shop?.shopName}
                         </h1>
                       </div>
                       <div className="flex items-center">
                         <GoLocation className="text-sm mr-3" />
 
                         <h1 className="text-sm font-thin my-1">
-                          {service?.data?.shop?.location}
+                          {service?.shop?.location}
                         </h1>
                       </div>
                       <div className="flex items-center">
                         <PiTimerLight className="text-sm mr-3" />
 
                         <h1 className="text-sm font-thin my-0">
-                          {service?.data?.shop?.serviceTime?.openingHour +
+                          {service?.shop?.serviceTime?.openingHour +
                             '-' +
-                            service?.data?.shop?.serviceTime?.closingHour}
+                            service?.shop?.serviceTime?.closingHour}
                         </h1>
                       </div>
                       <div className="flex items-center">
                         <IoLockClosedOutline className="text-sm mr-3" />
 
                         <h1 className="text-sm font-thin mt-1 mb-0">
-                          {service?.data?.shop?.serviceTime?.offDays
+                          {service?.shop?.serviceTime?.offDays
                             ?.map(
                               (day: string) =>
                                 day.charAt(0) + day.slice(1).toLowerCase(),

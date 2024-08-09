@@ -27,6 +27,30 @@ const serviceApi = baseApi.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: tagTypes.SERVICES, id }],
     }),
+    getTopServices: build.query({
+      query: params => ({
+        url: `/services/top`,
+        method: 'GET',
+        params,
+      }),
+      providesTags: [tagTypes.SERVICES],
+      keepUnusedDataFor: 10,
+    }),
+    updateService: build.mutation({
+      query: ({ id, data }) => ({
+        url: `/services/${id}`,
+        method: 'PUT',
+        data: data,
+      }),
+      invalidatesTags: [tagTypes.SERVICES],
+    }),
+    deleteService: build.mutation({
+      query: id => ({
+        url: `/services/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [tagTypes.SERVICES],
+    }),
   }),
 })
 
@@ -34,4 +58,7 @@ export const {
   useCreateServiceMutation,
   useGetServicesQuery,
   useGetServiceQuery,
+  useGetTopServicesQuery,
+  useDeleteServiceMutation,
+  useUpdateServiceMutation,
 } = serviceApi
