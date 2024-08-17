@@ -7,6 +7,7 @@ import { getUserInfo } from '@/services/auth.service'
 import SVSignupConfirmationModal from './SVSignupConfirmationModal'
 import { IoEye } from 'react-icons/io5'
 import Link from 'next/link'
+import SVBookingConfirmationModal from './SVBookingConfirmationModal'
 
 interface ICard {
   images: { img: string }[]
@@ -85,10 +86,26 @@ export default function SVCard({
         ) : (
           <>
             {userInfo?.role ? (
-              <SVButton
-                title="Book Now"
-                style={{ width: '100%', background: '#4d3ca3' }}
-              />
+              <div className="flex space-x-4 justify-center">
+                <div style={{ width: '80%' }}>
+                  <SVBookingConfirmationModal width="65%" service={service}/>
+                </div>
+                <Link
+                  href={`/product-details/${service?._id}`}
+                  className="text-black"
+                >
+                  <SVButton
+                    icon={<FaRegEye className="text-lg" />}
+                    type="text"
+                    title="Preview"
+                    style={{
+                      // background: '#fff',
+                      color: '#000',
+                      borderRadius: '10px',
+                    }}
+                  />
+                </Link>
+              </div>
             ) : (
               <div className="flex space-x-4 justify-center">
                 <div style={{ width: '80%' }}>

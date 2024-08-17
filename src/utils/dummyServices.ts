@@ -331,3 +331,32 @@ export const reviews = [
     date: '2023-07-10T19:50:50Z',
   },
 ]
+
+export const timeSlots = [
+  { id: 1, time: '10:00 AM', maxResource: 5 },
+  { id: 2, time: '11:00 AM', maxResource: 5 },
+  { id: 3, time: '12:00 PM', maxResource: 5 },
+  { id: 4, time: '1:00 PM', maxResource: 5 },
+  { id: 5, time: '2:00 PM', maxResource: 5 },
+  { id: 6, time: '3:00 PM', maxResource: 5 },
+  { id: 7, time: '4:00 PM', maxResource: 5 },
+  { id: 8, time: '5:00 PM', maxResource: 5 },
+  { id: 9, time: '6:00 PM', maxResource: 5 },
+  { id: 10, time: '7:00 PM', maxResource: 5 },
+  { id: 11, time: '8:00 PM', maxResource: 5 },
+]
+
+export const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]

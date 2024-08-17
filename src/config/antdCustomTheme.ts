@@ -13,11 +13,14 @@ const customTheme: ThemeConfig = {
       colorPrimary: '#1890ff',
       algorithm: true, // Enable algorithm
     },
-    // Input: {
-    //   colorBgContainer: '#f5f5f5',
-    //   hoverBorderColor: '#40a9ff',
-    //   activeBorderColor: '#1890ff',
-    // },
+    Checkbox: {
+      colorPrimary: '#4d3ca3',
+      colorPrimaryHover: '#4d3ca3',
+    },
+    Radio: {
+      colorPrimary: '#4d3ca3',
+      colorPrimaryHover: '#4d3ca3',
+    },
     Select: {
       colorBgContainer: '#f5f5f5',
       // Add more Select customizations

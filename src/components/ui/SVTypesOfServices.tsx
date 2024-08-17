@@ -86,7 +86,7 @@ export default function SVTypesOfServices() {
             key={service._id || index}
             className="mb-8"
           >
-            <SVCard service={service} />
+            <SVCard service={service} loading={false}/>
           </Col>
         ))}
       </Row>
