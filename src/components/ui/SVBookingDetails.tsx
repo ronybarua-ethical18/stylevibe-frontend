@@ -35,7 +35,7 @@ export default function SVBookingDetails({
     <div>
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col md={9}>
-          <SVCalendar />
+          <SVCalendar service={service}/>
         </Col>
         <Col md={15}>
           <div className="text-left">

@@ -6,6 +6,8 @@ import moment from 'moment'
 import styled from 'styled-components'
 import { Select as AntSelect } from 'antd'
 import { months, timeSlots } from '@/utils/dummyServices'
+import { useGetSingleShopTimeSlotsQuery } from '@/redux/api/timeslots'
+import { generateTimeSlots } from '@/utils/generateTimeSlots'
 
 const StyledCalendar = styled(Calendar)`
   .ant-picker-cell-selected .ant-picker-cell-inner {
@@ -24,13 +26,18 @@ const Select = styled(AntSelect)`
   }
 `
 
-const SVCalendar: React.FC = () => {
+const SVCalendar = ({ service }: { service: any }) => {
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<{
-    id: number
-    time: string
-    maxResource: number
+    _id: string
+    startTime: string
+    maxResourcePerHour: number
   }>()
+  const { data, error, isLoading } = useGetSingleShopTimeSlotsQuery({
+    shopId: service?.shop?._id, // Path parameter
+    date: selectedDate || moment().format('YYYY-MM-DD'), // Query parameter
+  })
+
   const onDateSelect = (value: Dayjs) => {
     console.log('selected date', value.format('YYYY-MM-DD'))
     setSelectedDate(value.format('YYYY-MM-DD'))
@@ -41,6 +48,17 @@ const SVCalendar: React.FC = () => {
     fontWeight: 500,
     fontSize: '16px',
   }
+
+  const shopTimeSlots =
+    data?.data?.timeSlots ||
+    generateTimeSlots(
+      service?.shop?.serviceTime?.openingHour,
+      service?.shop?.serviceTime?.closingHour,
+      5,
+    )
+
+  console.log("generated time slots",  service?.shop,
+    service?.shop?.serviceTime?.closingHour)
 
   return (
     <div
@@ -156,12 +174,12 @@ const SVCalendar: React.FC = () => {
           //   justifyContent: 'space-between',
         }}
       >
-        {timeSlots.map(item => (
+        {shopTimeSlots.map((item: any) => (
           <Tooltip
             color="#fff"
             placement="top"
             title={
-                <div className="flex flex-col items-center justify-center w-full">
+              <div className="flex flex-col items-center justify-center w-full">
                 <div className="flex flex-col items-center justify-center w-full">
                   <h3
                     className="text-customPrimary-800 flex items-center justify-center p-2 w-[40px] h-[40px] mb-0"
@@ -170,14 +188,13 @@ const SVCalendar: React.FC = () => {
                       borderRadius: '50%',
                     }}
                   >
-                    {item.maxResource}
+                    {item.maxResourcePerHour}
                   </h3>
                   <h4 className="font-normal text-base mt-2 text-customPrimary-800 text-center">
                     seats are available.
                   </h4>
                 </div>
               </div>
-              
             }
             overlayInnerStyle={{
               backgroundColor: '#fff',
@@ -187,8 +204,8 @@ const SVCalendar: React.FC = () => {
             }}
           >
             <div
-              key={item.id}
-              onClick={() => setSelectedTimeSlots(item)}
+              key={item._id}
+              onClick={() => item.maxResourcePerHour > 0 && setSelectedTimeSlots(item)}
               style={{
                 margin: '1%',
                 width: '22%',
@@ -196,14 +213,22 @@ const SVCalendar: React.FC = () => {
                 padding: '5px',
                 textAlign: 'center',
                 borderRadius: '4px',
-                cursor: 'pointer',
-                background: selectedTimeSlots?.id === item.id ? '#4d3ca3' : '',
-                color: selectedTimeSlots?.id === item.id ? '#fff' : 'black',
+                cursor: item.maxResourcePerHour < 1 ? "default":'pointer',
+                background:
+                item.maxResourcePerHour < 1 ? "#eee":selectedTimeSlots?._id?.toString() === item?._id?.toString()
+                    ? '#4d3ca3'
+                    : '',
+                color:
+                item.maxResourcePerHour < 1 ? "gray":selectedTimeSlots?._id?.toString() === item?._id?.toString()
+                    ? '#fff'
+                    : 'black',
                 transition: 'all 0.3s ease-in-out',
               }}
               className="border"
             >
-              <span style={{ fontSize: '12px' }}>{item.time}</span>
+              <span style={{ fontSize: '12px' }}>
+                {item?.startTime || item?.time}
+              </span>
             </div>
           </Tooltip>
         ))}
