@@ -4,6 +4,7 @@ import React, { ReactNode, useState } from 'react'
 import { Modal } from 'antd'
 import SVButton from '../SVButton'
 import SVBookingDetails from './SVBookingDetails'
+import PaymentWrapper from '../Forms/PaymentForm'
 
 const SVBookingConfirmationModal = ({
   width,
@@ -47,7 +48,8 @@ const SVBookingConfirmationModal = ({
           </h3>
 
           <div className="w-full mt-5 p-4">
-            <SVBookingDetails isModalOpen={open} service={service} />
+            {/* <SVBookingDetails isModalOpen={open} service={service} /> */}
+            <PaymentWrapper />
           </div>
           {/* <Link href="/login">
           <SVButton
