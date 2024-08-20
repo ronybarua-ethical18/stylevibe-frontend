@@ -26,14 +26,20 @@ const Select = styled(AntSelect)`
   }
 `
 
-const SVCalendar = ({ service }: { service: any }) => {
-  const [selectedDate, setSelectedDate] = useState('')
-  const [selectedTimeSlots, setSelectedTimeSlots] = useState<{
-    _id: string
-    startTime: string
-    maxResourcePerHour: number
-  }>()
-  const { data, error, isLoading } = useGetSingleShopTimeSlotsQuery({
+const SVCalendar = ({
+  service,
+  selectedDate,
+  setSelectedDate,
+  selectedTimeSlots,
+  setSelectedTimeSlots,
+}: {
+  service: any
+  selectedDate: string
+  setSelectedDate: any
+  selectedTimeSlots: any
+  setSelectedTimeSlots: any
+}) => {
+  const { data } = useGetSingleShopTimeSlotsQuery({
     shopId: service?.shop?._id, // Path parameter
     date: selectedDate || moment().format('YYYY-MM-DD'), // Query parameter
   })
@@ -57,8 +63,8 @@ const SVCalendar = ({ service }: { service: any }) => {
       5,
     )
 
-  console.log("generated time slots",  service?.shop,
-    service?.shop?.serviceTime?.closingHour)
+  console.log('selectedTimeSlots', selectedTimeSlots)
+  console.log('selected date', selectedDate)
 
   return (
     <div
@@ -159,7 +165,7 @@ const SVCalendar = ({ service }: { service: any }) => {
           )
         }}
       />
-      <div className="text-left mt-5">
+      <div className="text-left mt-3">
         <h1 className="font-light ml-1">
           Available times for{' '}
           <strong className="text-customPrimary-800 font-semibold">
@@ -205,23 +211,31 @@ const SVCalendar = ({ service }: { service: any }) => {
           >
             <div
               key={item._id}
-              onClick={() => item.maxResourcePerHour > 0 && setSelectedTimeSlots(item)}
+              onClick={() =>
+                item.maxResourcePerHour > 0 && setSelectedTimeSlots(item)
+              }
               style={{
                 margin: '1%',
                 width: '22%',
-                marginBottom: '10px',
+                marginBottom: '5px',
                 padding: '5px',
                 textAlign: 'center',
                 borderRadius: '4px',
-                cursor: item.maxResourcePerHour < 1 ? "default":'pointer',
+                cursor: item.maxResourcePerHour < 1 ? 'default' : 'pointer',
                 background:
-                item.maxResourcePerHour < 1 ? "#eee":selectedTimeSlots?._id?.toString() === item?._id?.toString()
-                    ? '#4d3ca3'
-                    : '',
+                  item.maxResourcePerHour < 1
+                    ? '#eee'
+                    : selectedTimeSlots?._id?.toString() ===
+                        item?._id?.toString()
+                      ? '#4d3ca3'
+                      : '',
                 color:
-                item.maxResourcePerHour < 1 ? "gray":selectedTimeSlots?._id?.toString() === item?._id?.toString()
-                    ? '#fff'
-                    : 'black',
+                  item.maxResourcePerHour < 1
+                    ? 'gray'
+                    : selectedTimeSlots?._id?.toString() ===
+                        item?._id?.toString()
+                      ? '#fff'
+                      : 'black',
                 transition: 'all 0.3s ease-in-out',
               }}
               className="border"

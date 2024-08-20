@@ -5,17 +5,76 @@ import { Modal } from 'antd'
 import SVButton from '../SVButton'
 import SVBookingDetails from './SVBookingDetails'
 import PaymentWrapper from '../Forms/PaymentForm'
+import SVStepper from './SVStepper'
+import { BiArrowBack } from 'react-icons/bi'
 
 const SVBookingConfirmationModal = ({
   width,
-  service
+  service,
 }: {
-  width: string | number,
-  service:any
+  width: string | number
+  service: any
 }): ReactNode => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(!open)
+
+  const [selectedDate, setSelectedDate] = useState('')
+  const [selectedTimeSlots, setSelectedTimeSlots] = useState<{
+    _id: string
+    startTime: string
+    maxResourcePerHour: number
+  }>()
+
+  const [selectedMethod, setSelectedMethod] = useState<any>()
+
+  const handleSelect = (item: { item: any }) => {
+    setSelectedMethod(item)
+  }
+
+  const [current, setCurrent] = useState(0)
+  const next = () => {
+    setCurrent(current + 1)
+  }
+
+  const prev = () => {
+    setCurrent(current - 1)
+  }
+
+  const processingFees = (service?.price * 2.9) / 100 + 0.3
+  const totalAmount = processingFees + service?.price
+
+  const steps = [
+    {
+      title: 'Date Selection',
+      content: (
+        <SVBookingDetails
+          service={service}
+          next={next}
+          processingFees={processingFees}
+          totalAmount={totalAmount}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          selectedTimeSlots={selectedTimeSlots}
+          setSelectedTimeSlots={setSelectedTimeSlots}
+          selectedMethod={selectedMethod}
+          handleSelect={handleSelect}
+        />
+      ),
+    },
+    {
+      title: 'Payment',
+      content: (
+        <PaymentWrapper
+          service={service}
+          processingFees={processingFees}
+          totalAmount={totalAmount}
+        />
+      ),
+    },
+  ]
+
+  console.log("selected method", selectedMethod)
 
   return (
     <div>
@@ -40,25 +99,22 @@ const SVBookingConfirmationModal = ({
         // maskStyle={{ background: 'rgba(0,0,0,0.09)' }}
         maskAnimation={true}
       >
-        <div className="text-center p-6 ">
+        <div className="text-center px-6 py-2 relative h-[90vh] max-h-[800px] overflow-y-auto overflow-x-hidden scrollbar-hide">
+          {current > 0 && (
+            <BiArrowBack
+              onClick={prev}
+              className="absolute left-9 top-8 text-gray-500 text-2xl cursor-pointer"
+            />
+          )}
           <h1 className="text-3xl">Booking Confirmation</h1>
           <h3 className="font-extralight text-base">
             Kindly review your booking details below. Once you're satisfied,
             proceed to confirm your booking for a seamless salon experience.
           </h3>
 
-          <div className="w-full mt-5 p-4">
-            {/* <SVBookingDetails isModalOpen={open} service={service} /> */}
-            <PaymentWrapper />
+          <div className="w-full mt-0 p-4">
+            <SVStepper steps={steps} current={current} />
           </div>
-          {/* <Link href="/login">
-          <SVButton
-            type="primary"
-            title="Sign up now"
-            className="mt-10"
-            style={{ background: '#4d3ca3', width: '100%' }}
-          />
-          </Link> */}
         </div>
       </Modal>
     </div>

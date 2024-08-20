@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react'
-import { Col, Form, Row, notification } from 'antd'
+import { Col, Form, Rate, Row, notification } from 'antd'
 import { loadStripe } from '@stripe/stripe-js'
 import {
   Elements,
@@ -14,6 +14,7 @@ import card from '@/assets/card.png'
 import SVButton from '../SVButton'
 import { CiCalendarDate, CiCreditCard2, CiLock } from 'react-icons/ci'
 import { IconType } from 'react-icons'
+import { FaStore } from 'react-icons/fa'
 
 interface InputWrapperProps {
   icon: IconType
@@ -138,17 +139,58 @@ const PaymentForm = () => {
   )
 }
 
-const PaymentWrapper = () => (
+const PaymentWrapper = ({
+  service,
+  processingFees,
+  totalAmount,
+}: {
+  service: any
+  processingFees: number
+  totalAmount: number
+}) => (
   <Elements stripe={stripePromise}>
-    <div className="my-10">
-      <Row gutter={40}>
-        <Col span={12} className="flex items-center h-full mt-2">
+    <div className="my-15" style={{width:"50%", margin:"auto"}}>
+      <Row gutter={40} className="flex items-center">
+        {/* <Col span={12} className="flex items-center h-full mt-0">
           <Image src={card} alt="card logo" className="rounded-sm" />
-        </Col>
-        <Col span={12}>
-          <h2 className="text-2xl font-medium text-left mb-5 mt-0">
+        </Col> */}
+        <Col span={24}>
+          <h2 className="text-2xl font-medium text-left  mt-5 mb-0">
             Payment Details
           </h2>
+          <h5 className='mt-0 text-base font-extralight mb-8 text-left'>Please take a deep look before payment with your visa card</h5>
+          <div
+            className="flex justify-between w-full items-center text-left mb-5"
+            style={{
+              boxShadow:
+                'rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset',
+            }}
+          >
+            <div>
+              <div>
+                <h3 className="font-medium text-base m-0">{service?.name}</h3>
+                <p className="font-thin">{service?.subCategory}</p>
+              </div>
+              <div className="flex items-center">
+                <Rate
+                  allowHalf
+                  defaultValue={2.5}
+                  style={{
+                    fontSize: 14,
+                    marginRight: '10px',
+                    color: '#4d3ca3',
+                  }}
+                />
+                <h4 className="text-gray-600 font-extralight">134 reviews</h4>
+              </div>
+            </div>
+          <div className='text-right '>
+          <h2 className="text-xl text-customPrimary-800 font-medium m-0">
+              ${totalAmount}
+            </h2>
+            <small className='text-gray-400'>including tax & processing fees</small>
+          </div>
+          </div>
           <PaymentForm />
         </Col>
       </Row>

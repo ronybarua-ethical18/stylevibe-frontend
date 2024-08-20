@@ -46,18 +46,6 @@ export default function SVBookedService({ service }: any) {
           </h2>
         </div>
       </div>
-      {/* <div className="flex items-center">
-          <Rate
-            allowHalf
-            defaultValue={2.5}
-            style={{
-              fontSize: 20,
-              marginRight: '10px',
-              color: '#4d3ca3',
-            }}
-          />
-          <h4 className="text-gray-600 font-extralight">134 reviews</h4>
-        </div> */}
     </div>
   )
 }
