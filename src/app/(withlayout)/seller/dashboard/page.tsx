@@ -1,12 +1,10 @@
-
-
 import SVBreadCrumb from '@/components/ui/SVBreadCrumb'
 import React from 'react'
 
 export default function SellerDashboard() {
   return (
     <div>
-         <SVBreadCrumb
+      <SVBreadCrumb
         items={[
           {
             label: `seller`,
@@ -18,7 +16,7 @@ export default function SellerDashboard() {
           },
         ]}
       />
-        This is seller dashboard
-        </div>
+      This is seller dashboard
+    </div>
   )
 }

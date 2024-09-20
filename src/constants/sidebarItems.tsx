@@ -44,7 +44,7 @@ export const sidebarItems = (role: string) => {
       icon: <FaUsers style={{ fontSize: '16px' }} />,
     },
     {
-      label: 'Settings',
+      label: <Link href={`/${role}/settings`}>Settings</Link>,
       key: 'setting',
       icon: <IoSettingsOutline style={{ fontSize: '16px' }} />,
     },

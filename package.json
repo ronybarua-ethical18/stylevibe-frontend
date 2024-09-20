@@ -14,7 +14,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "src/**/*.ts": "yarn prettier:check"
+    "src/**/*.ts": "yarn lint-prettier"
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
