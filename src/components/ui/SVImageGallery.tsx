@@ -17,7 +17,7 @@ export default function SVImageGallery({ imageList }:any) {
   });
 
   return (
-    <div>
+    <div className="w-full">
       {images?.length !== 0 ? (
         <ImageGallery
         //   onErrorImageURL={PlaceHolderImage}
@@ -44,6 +44,7 @@ export default function SVImageGallery({ imageList }:any) {
             borderRadius: "5px",
             display: "grid",
             placeItems: "center",
+            width:"100%"
             // textAlign: "center",
           }}
         >

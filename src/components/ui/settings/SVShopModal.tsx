@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactNode, useState } from 'react'
-import { Button, Col, Modal, Row, message } from 'antd'
+import { Button, Col, Modal, Row, Switch, message } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   closeModal,
@@ -15,33 +15,36 @@ import FormSelectField from '@/components/Forms/FormSelectField'
 import FormTextArea from '@/components/Forms/FormTextArea'
 import SVUplaod from '../SVUpload'
 import { SubmitHandler } from 'react-hook-form'
+import { useCreateShopMutation, useUpdateShopMutation } from '@/redux/api/shop'
+import { useGetUserProfileQuery } from '@/redux/api/users'
+import { getUserInfo } from '@/services/auth.service'
 
 export const SERVICE_TIME_SLOTS = [
-    { value: '9:00 AM', label: '9:00 AM' },
-    { value: '10:00 AM', label: '10:00 AM' },
-    { value: '11:00 AM', label: '11:00 AM' },
-    { value: '12:00 PM', label: '12:00 PM' },
-    { value: '1:00 PM', label: '1:00 PM' },
-    { value: '2:00 PM', label: '2:00 PM' },
-    { value: '3:00 PM', label: '3:00 PM' },
-    { value: '4:00 PM', label: '4:00 PM' },
-    { value: '5:00 PM', label: '5:00 PM' },
-    { value: '6:00 PM', label: '6:00 PM' },
-    { value: '7:00 PM', label: '7:00 PM' },
-    { value: '8:00 PM', label: '8:00 PM' },
-    { value: '9:00 PM', label: '9:00 PM' },
-    { value: '10:00 PM', label: '10:00 PM' },
-  ]
-  
-  export const SERVICE_OFF_DAYS = [
-    { value: 'SUNDAY', label: 'Sunday' },
-    { value: 'MONDAY', label: 'Monday' },
-    { value: 'TUESDAY', label: 'Tuesday' },
-    { value: 'WEDNESDAY', label: 'Wednesday' },
-    { value: 'THURSDAY', label: 'Thursday' },
-    { value: 'FRIDAY', label: 'Friday' },
-    { value: 'SATURDAY', label: 'Saturday' },
-  ]
+  { value: '9:00 AM', label: '9:00 AM' },
+  { value: '10:00 AM', label: '10:00 AM' },
+  { value: '11:00 AM', label: '11:00 AM' },
+  { value: '12:00 PM', label: '12:00 PM' },
+  { value: '1:00 PM', label: '1:00 PM' },
+  { value: '2:00 PM', label: '2:00 PM' },
+  { value: '3:00 PM', label: '3:00 PM' },
+  { value: '4:00 PM', label: '4:00 PM' },
+  { value: '5:00 PM', label: '5:00 PM' },
+  { value: '6:00 PM', label: '6:00 PM' },
+  { value: '7:00 PM', label: '7:00 PM' },
+  { value: '8:00 PM', label: '8:00 PM' },
+  { value: '9:00 PM', label: '9:00 PM' },
+  { value: '10:00 PM', label: '10:00 PM' },
+]
+
+export const SERVICE_OFF_DAYS = [
+  { value: 'SUNDAY', label: 'Sunday' },
+  { value: 'MONDAY', label: 'Monday' },
+  { value: 'TUESDAY', label: 'Tuesday' },
+  { value: 'WEDNESDAY', label: 'Wednesday' },
+  { value: 'THURSDAY', label: 'Thursday' },
+  { value: 'FRIDAY', label: 'Friday' },
+  { value: 'SATURDAY', label: 'Saturday' },
+]
 
 type FormValues = {
   shopName: string
@@ -56,39 +59,83 @@ type FormValues = {
   }
 }
 
-const SVShopModal = (): ReactNode => {
+type Props = {
+  edit: boolean
+  shopData?: any
+}
+
+const SVShopModal = ({ edit, shopData }: Props): ReactNode => {
   const { isModalOpen } = useSelector(globalSelector)
   const dispatch = useDispatch()
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState(shopData?.shop?.gallery || [])
+  const [createShop, { isLoading }] = useCreateShopMutation()
+  const [updateShop, { isLoading: isUpdateLoading }] = useUpdateShopMutation()
+  const loggedUser = getUserInfo() as any
+  const { refetch } = useGetUserProfileQuery(loggedUser?.userId)
+  const [isChecked, setIsChecked] = useState(false)
 
-  const onSubmit: SubmitHandler<FormValues> = (data: any) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
-      console.log('shop modal data', {
+      const manipulatedObj = {
         ...data,
         serviceTime: {
-          openingHour: data?.openingHour,
-          closingHour: data?.closingHour,
-          offDays: data?.offDays,
+          openingHour:
+            data?.openingHour || shopData?.shop?.serviceTime?.openingHour,
+          closingHour:
+            data?.closingHour || shopData?.shop?.serviceTime?.closingHour,
+          offDays: data?.offDays || shopData?.shop?.serviceTime?.offDays,
         },
-        maxResourcePerHour: Number(data?.maxResourcePerHour),
-        gallery: images,
-      })
+        maxResourcePerHour:
+          Number(data?.maxResourcePerHour) ||
+          shopData?.shop?.maxResourcePerHour,
+        gallery: images?.map((image:any) =>{
+          return typeof image === 'string' ? { img: image } : image
+        }),
+        location: data?.location || shopData?.shop?.location,
+        shopName: data?.shopName || shopData?.shop?.shopName,
+        shopDescription: data?.shopDescription || shopData?.shop?.shopDescription,
+      }
+      if (edit) {
+        console.log("manipulatedObj", manipulatedObj)
+        await updateShop({
+          id: shopData?.shop?._id,
+          data: manipulatedObj,
+        }).unwrap()
+      } else {
+        await createShop(manipulatedObj).unwrap()
+      }
+      refetch()
+      setIsChecked(false)
+      dispatch(closeModal(false))
+      message.success('Shop created successfully!')
     } catch (err: any) {
       message.error(err?.data?.message)
     }
   }
 
-  console.log('shop images', images)
+  const handleChange = (checked: any) => {
+    setIsChecked(checked)
+    dispatch(showModal(checked))
+  }
 
   return (
     <div>
       <div className="flex justify-center">
-        <div
-          className="border border-dashed rounded-full flex items-center justify-center w-28 h-28 cursor-pointer"
-          onClick={() => dispatch(showModal(true))}
-        >
-          <GrAdd />
-        </div>
+        {edit ? (
+          <Switch
+            checked={isChecked}
+            checkedChildren="Edit"
+            unCheckedChildren="View"
+            onChange={handleChange}
+          />
+        ) : (
+          <div
+            className="border border-dashed rounded-full flex items-center justify-center w-28 h-28 cursor-pointer"
+            onClick={() => dispatch(showModal(true))}
+          >
+            <GrAdd />
+          </div>
+        )}
       </div>
       <Modal
         width={850}
@@ -97,17 +144,17 @@ const SVShopModal = (): ReactNode => {
         footer={null}
         onCancel={() => {
           dispatch(closeModal(false))
+          setIsChecked(false)
         }}
         onClose={() => {
           dispatch(closeModal(false))
+          setIsChecked(false)
         }}
-        maskStyle={{ background: 'rgba(0,0,0, 0.4)' }}
         maskAnimation={true}
+        bodyStyle={{ height: '90vh', overflowY: 'auto' }}
+        className="no-scrollbar "
       >
-        <div
-          className="overflow-y-scroll no-scrollbar w-full"
-          style={{ height: '90%' }}
-        >
+        <div className="overflow-y-scroll no-scrollbar w-full p-6 ">
           <h1 className="text-2xl text-center font-normal">Shop Information</h1>
           <h2 className="text-base text-center font-light text-gray-600 mb-8">
             Write down essential details about your shop and services.
@@ -120,6 +167,7 @@ const SVShopModal = (): ReactNode => {
                   placeholder="Enter shop name"
                   type="text"
                   label="Name"
+                  defaultValue={shopData?.shop?.shopName || ''}
                   // defaultValue={incomingData?.name || ""}
                 />
               </Col>
@@ -129,7 +177,7 @@ const SVShopModal = (): ReactNode => {
                   placeholder="Enter shop location"
                   type="text"
                   label="Location"
-                  // defaultValue={incomingData?.price || ""}
+                  defaultValue={shopData?.shop?.location || ''}
                 />
               </Col>
               <Col className="gutter-row" span={12}>
@@ -138,6 +186,7 @@ const SVShopModal = (): ReactNode => {
                   options={SERVICE_TIME_SLOTS}
                   placeholder="Select"
                   label="Service Start Time"
+                  defaultValue={shopData?.shop?.serviceTime?.openingHour || ''}
                 />
               </Col>
               <Col className="gutter-row" span={12}>
@@ -146,6 +195,7 @@ const SVShopModal = (): ReactNode => {
                   options={SERVICE_TIME_SLOTS}
                   placeholder="Select"
                   label="Service End Time"
+                  defaultValue={shopData?.shop?.serviceTime?.closingHour || ''}
                 />
               </Col>
               <Col className="gutter-row" span={12}>
@@ -154,7 +204,7 @@ const SVShopModal = (): ReactNode => {
                   placeholder="Max resource"
                   type="number"
                   label="Max Resource Per Hour"
-                  // defaultValue={incomingData?.price || ""}
+                  defaultValue={shopData?.shop?.maxResourcePerHour || ''}
                 />
               </Col>
               <Col className="gutter-row" span={12}>
@@ -164,6 +214,7 @@ const SVShopModal = (): ReactNode => {
                   placeholder="Select"
                   label="Service Off Days"
                   mode="multiple"
+                  defaultValue={shopData?.shop?.serviceTime?.offDays || []}
                 />
               </Col>
               <Col className="gutter-row" span={24}>
@@ -172,6 +223,7 @@ const SVShopModal = (): ReactNode => {
                   placeholder="Write Description"
                   label="Description"
                   maxLength={400}
+                  defaultValue={shopData?.shop?.shopDescription || ''}
                 />
               </Col>
               <Col className="gutter-row" span={24}>
@@ -182,9 +234,15 @@ const SVShopModal = (): ReactNode => {
               </Col>
             </Row>
             <div className="flex justify-end mt-7">
-              <Button htmlType="submit" type="primary" className="text-right">
-                Submit
-              </Button>
+              {!isLoading ? (
+                <Button htmlType="submit" type="primary" className="text-right" disabled={isUpdateLoading || isLoading }>
+                  {edit ? 'Update' : 'Submit'}
+                </Button>
+              ) : (
+                <Button type="primary" loading iconPosition="end">
+                  Loading
+                </Button>
+              )}
             </div>
           </Form>
         </div>

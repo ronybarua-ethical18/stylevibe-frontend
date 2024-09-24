@@ -18,14 +18,24 @@ export const axiosBaseQuery =
     unknown,
     unknown
   > =>
-  async ({ url, method, data, params, headers }) => {
+  async ({
+    url,
+    method,
+    data,
+    params,
+    headers,
+    contentType = 'application/json',
+  }) => {
     try {
       const result = await axiosInstance({
         url: baseUrl + url,
         method,
         data,
         params,
-        headers,
+        headers: {
+          'Content-Type': contentType,
+          ...headers,
+        },
         withCredentials: true,
       })
       return { data: result.data }

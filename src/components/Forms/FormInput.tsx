@@ -17,6 +17,7 @@ interface IInput {
   required?: boolean;
   prefix?:React.ReactNode;
   style?:object
+  disabled?:boolean
 }
 
 const FormInput = ({
@@ -33,6 +34,7 @@ const FormInput = ({
   label,
   variant ='outlined',
   required,
+  disabled
 }: IInput) => {
   const {
     control,
@@ -79,6 +81,7 @@ const FormInput = ({
               value={value ? value : field.value}
               variant={variant}
               style={style}
+              disabled={disabled}
               {...field}
              
             />

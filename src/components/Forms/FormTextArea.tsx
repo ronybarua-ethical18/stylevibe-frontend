@@ -28,7 +28,7 @@ const FormTextArea = ({
   placeholder = 'Description',
   label,
   handleChange,
-  maxLength=200,
+  maxLength=1000,
   rows=4,
   defaultValue
 }: ITextInput) => {

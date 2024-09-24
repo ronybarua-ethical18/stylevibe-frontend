@@ -1,15 +1,14 @@
 'use client'
 
 import React from 'react'
-import { Segmented } from 'antd'
+import { Segmented, Spin } from 'antd'
 import type { SegmentedValue } from 'antd/es/segmented'
 import { CiUser } from 'react-icons/ci'
-import { FaShopware } from 'react-icons/fa6'
 import { CiCreditCard2 } from 'react-icons/ci'
-import SVPersonalInfo from './settings/SVPersonalInfo'
 import SVShopInfo from './settings/SVShopInfo'
+import SVPersonalInfo from './settings/SVPersonalInfo'
 
-const SVSettingTabs: React.FC = () => {
+const SVSettingTabs = ({userProfile}:any) => {
   const [activeTab, setActiveTab] = React.useState<SegmentedValue>('1')
 
   const items = [
@@ -36,8 +35,8 @@ const SVSettingTabs: React.FC = () => {
         {activeTab === '1' ? (
           <>
             <div className="grid grid-cols-2 gap-10">
-              <SVPersonalInfo />
-              <SVShopInfo />
+              <SVPersonalInfo userProfile={userProfile} />
+              <SVShopInfo shopData={userProfile}/>
             </div>
           </>
         ) : (
@@ -77,7 +76,7 @@ const SVSettingTabs: React.FC = () => {
           onChange={handleTabChange}
         />
       </div>
-      <div style={{ marginTop: 16 }}>{renderContent()}</div>
+      <div style={{ marginTop: 16 }}>{userProfile ? renderContent():<div className='h-[600px] bg-white flex items-center justify-center'><Spin size='large'/></div>}</div>
     </div>
   )
 }
