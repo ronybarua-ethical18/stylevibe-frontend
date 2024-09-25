@@ -57,7 +57,7 @@ interface SVPersonalInfoEditFormProps {
     <div>
       <div className="my-5 flex justify-between items-center">
         <div className="flex space-x-5 items-center">
-          <SVProfilePhotoUpload photoUrl={photoUrl} setPhotoUrl={setPhotoUrl} />
+          <SVProfilePhotoUpload photoUrl={photoUrl} setPhotoUrl={(url: string | null) => setPhotoUrl(url || '')} />
           <div className="">
             <h4 className="text-base font-medium mb-0">
               {userProfile?.firstName + ' ' + userProfile?.lastName}

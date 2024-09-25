@@ -7,6 +7,7 @@ import { CiUser } from 'react-icons/ci'
 import { CiCreditCard2 } from 'react-icons/ci'
 import SVShopInfo from './settings/SVShopInfo'
 import SVPersonalInfo from './settings/SVPersonalInfo'
+import StripeAccountConnection from './settings/StripeAccountConnection'
 
 const SVSettingTabs = ({userProfile}:any) => {
   const [activeTab, setActiveTab] = React.useState<SegmentedValue>('1')
@@ -40,7 +41,9 @@ const SVSettingTabs = ({userProfile}:any) => {
             </div>
           </>
         ) : (
-          <div>Stripe account</div>
+          <div>
+            <StripeAccountConnection />
+          </div>
         )}
       </div>
     )

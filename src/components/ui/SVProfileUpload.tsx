@@ -1,10 +1,11 @@
+import Image from 'next/image'
 import React, { useState, ChangeEvent } from 'react'
-import { PiPlus } from 'react-icons/pi'
+import { PiPlus, PiPencilSimple, PiTrash } from 'react-icons/pi'
 
 interface ProfilePhotoUploadProps {
   maxSizeInMB?: number
-  photoUrl:any,
-  setPhotoUrl:any
+  photoUrl: string | null
+  setPhotoUrl: (url: string | null) => void
 }
 
 const SVProfilePhotoUpload: React.FC<ProfilePhotoUploadProps> = ({
@@ -50,11 +51,25 @@ const SVProfilePhotoUpload: React.FC<ProfilePhotoUploadProps> = ({
     }
   }
 
+  const handleDelete = () => {
+    setPhotoUrl(null)
+  }
+
   return (
     <div className="flex flex-col items-center">
-      <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+      <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center group">
         {photoUrl ? (
-          <img src={photoUrl} alt="Profile" className="w-full h-full object-cover" />
+          <>
+            <Image src={photoUrl} alt="Profile" className="w-full h-full object-cover" width={80} height={80} />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <label htmlFor="photo-upload" className="cursor-pointer p-1 bg-white rounded-full mr-2">
+                <PiPencilSimple className="text-gray-700" size={16} />
+              </label>
+              <button onClick={handleDelete} className="p-1 bg-white rounded-full">
+                <PiTrash className="text-gray-700" size={16} />
+              </button>
+            </div>
+          </>
         ) : (
           <label htmlFor="photo-upload" className="cursor-pointer">
             {isUploading ? (

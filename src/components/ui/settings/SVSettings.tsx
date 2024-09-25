@@ -1,17 +1,36 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import SVBreadCrumb from '../SVBreadCrumb'
 import SVSettingTabs from '../SVSettingTabs'
 import { useGetUserProfileQuery } from '@/redux/api/users'
 import { getUserInfo } from '@/services/auth.service'
+import { useRouter, useSearchParams } from 'next/navigation'
+import SVStripeSuccessfulConnectionModal from '../SVStripeSuccessfulConnectionModal'
 
 function SVSettings() {
-  const loggedUser:any = getUserInfo()
-  const { data: userProfile } =
-    useGetUserProfileQuery(loggedUser?.userId)
+  const loggedUser: any = getUserInfo()
+  const { data: userProfile } = useGetUserProfileQuery(loggedUser?.userId)
 
-  console.log('user profile', userProfile)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const success = searchParams.get('success')
+  const [modalVisible, setModalVisible] = React.useState(false)
+
+  useEffect(() => {
+    if (success) {
+      setModalVisible(true)
+      
+      // Remove the query parameter after 2 seconds
+      const timer = setTimeout(() => {
+        router.replace('/seller/settings')
+      }, 2000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [success, router])
+
+  console.log('query params', success)
   return (
     <div>
       <SVBreadCrumb
@@ -32,6 +51,10 @@ function SVSettings() {
           Control your profile as your need
         </h2>
       </div>
+      <div style={{visibility: modalVisible ? 'visible' : 'hidden'}}><SVStripeSuccessfulConnectionModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      /></div>
       <SVSettingTabs userProfile={userProfile?.data} />
     </div>
   )
