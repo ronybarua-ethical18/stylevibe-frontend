@@ -20,7 +20,7 @@ function SVSettings() {
   useEffect(() => {
     if (success) {
       setModalVisible(true)
-      
+
       // Remove the query parameter after 2 seconds
       const timer = setTimeout(() => {
         router.replace('/seller/settings')
@@ -51,10 +51,12 @@ function SVSettings() {
           Control your profile as your need
         </h2>
       </div>
-      <div style={{visibility: modalVisible ? 'visible' : 'hidden'}}><SVStripeSuccessfulConnectionModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-      /></div>
+      <div style={{ visibility: modalVisible ? 'visible' : 'hidden' }}>
+        <SVStripeSuccessfulConnectionModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
+      </div>
       <SVSettingTabs userProfile={userProfile?.data} />
     </div>
   )

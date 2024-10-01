@@ -15,6 +15,7 @@ interface IButton {
   disabled?: any
   icon?: any
   loading?:any
+  htmlType?:any
 }
 export default function SVButton({
   type,
@@ -25,7 +26,8 @@ export default function SVButton({
   className,
   disabled,
   icon,
-  loading
+  loading,
+  htmlType
 }: IButton): React.ReactNode {
   return (
     <Button
@@ -36,6 +38,7 @@ export default function SVButton({
       className={className}
       onClick={onClick}
       disabled={disabled}
+      htmlType={htmlType}
     >
       {title}
     </Button>

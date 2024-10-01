@@ -8,8 +8,9 @@ import { CiCreditCard2 } from 'react-icons/ci'
 import SVShopInfo from './settings/SVShopInfo'
 import SVPersonalInfo from './settings/SVPersonalInfo'
 import StripeAccountConnection from './settings/StripeAccountConnection'
+import StripeAccountInformation from './settings/StripeAccountInformation'
 
-const SVSettingTabs = ({userProfile}:any) => {
+const SVSettingTabs = ({ userProfile }: any) => {
   const [activeTab, setActiveTab] = React.useState<SegmentedValue>('1')
 
   const items = [
@@ -37,12 +38,25 @@ const SVSettingTabs = ({userProfile}:any) => {
           <>
             <div className="grid grid-cols-2 gap-10">
               <SVPersonalInfo userProfile={userProfile} />
-              <SVShopInfo shopData={userProfile}/>
+              <SVShopInfo shopData={userProfile} />
             </div>
           </>
         ) : (
-          <div>
-            <StripeAccountConnection />
+          <div className="w-full">
+            {userProfile?.stripeAccountDetails ? (
+              <StripeAccountInformation
+                bankName={userProfile.stripeAccountDetails.bankName || "STRIPE TEST BANK"}
+                country={userProfile.stripeAccountDetails.country || "United States"}
+                currency={userProfile.stripeAccountDetails.currency || "usd"}
+                amount={userProfile.stripeAccountDetails.balance}
+                onDisconnect={() => {
+                  // Implement disconnect logic here
+                  console.log('Disconnecting Stripe account');
+                }}
+              />
+            ) : (
+              <StripeAccountConnection />
+            )}
           </div>
         )}
       </div>
@@ -79,7 +93,15 @@ const SVSettingTabs = ({userProfile}:any) => {
           onChange={handleTabChange}
         />
       </div>
-      <div style={{ marginTop: 16 }}>{userProfile ? renderContent():<div className='h-[600px] bg-white flex items-center justify-center'><Spin size='large'/></div>}</div>
+      <div style={{ marginTop: 16 }}>
+        {userProfile ? (
+          renderContent()
+        ) : (
+          <div className="h-[600px] bg-white flex items-center justify-center">
+            <Spin size="large" />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

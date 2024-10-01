@@ -3,12 +3,10 @@
 import React, { useState } from 'react'
 import SVPersonalInfoEditForm from './SVPersonalInfoEditForm'
 import SVPersonalDetails from './SVPersonalDetails'
-import { Button } from 'antd'
 
 function SVPersonalInfo({ userProfile }: any) {
   const [isEditMode, setIsEditMode] = useState(false)
 
-  console.log('isEditMode', isEditMode)
   return (
     <div>
       <h1 className="text-xl font-normal">Personal Information</h1>

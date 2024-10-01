@@ -10,7 +10,17 @@ const stripeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.USER],
     }),
+    createPaymentIntent: build.mutation({
+      query: data => ({
+        url: '/stripe/payment-intent',
+        method: 'POST',
+        data: data,
+      }),
+    }),
   }),
 })
 
-export const { useConnectStripeAccountMutation } = stripeApi
+export const {
+  useConnectStripeAccountMutation,
+  useCreatePaymentIntentMutation,
+} = stripeApi

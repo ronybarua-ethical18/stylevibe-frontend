@@ -108,7 +108,7 @@ const SVBookingConfirmationModal = ({
           )}
           <h1 className="text-3xl">Booking Confirmation</h1>
           <h3 className="font-extralight text-base">
-            Kindly review your booking details below. Once you're satisfied,
+            Kindly review your booking details below. Once you are satisfied,
             proceed to confirm your booking for a seamless salon experience.
           </h3>
 
