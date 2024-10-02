@@ -36,18 +36,29 @@ const PaymentForm = ({
 
     setIsProcessing(true)
 
+    const { error: submitError } = await elements.submit()
+
+    if (submitError) {
+      setIsProcessing(false)
+      return
+    }
+
     const result = await stripe.confirmPayment({
       elements,
-      confirmParams: {
-        return_url: "https://localhost:3000/payment-success",
-      },
-    });
+      clientSecret: clientSecret as string,
+      redirect: 'if_required',
+    })
 
     if (result.error) {
-      console.log(result.error.message);
-      // Show error to your customer
+      console.log(result.error.message)
+      notification.error({
+        message: 'Payment Failed',
+        description: result.error.message,
+      })
     } else {
-      // Payment succeeded, handle accordingly
+      // Payment succeeded, show success modal
+      setIsSuccessModalVisible(true)
+      handleClose()
     }
 
     setIsProcessing(false)
