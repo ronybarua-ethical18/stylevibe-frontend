@@ -69,6 +69,7 @@ const SVBookingConfirmationModal = ({
           service={service}
           processingFees={processingFees}
           totalAmount={totalAmount}
+          handleClose={handleClose}
         />
       ),
     },
