@@ -16,6 +16,7 @@ import Loading from '@/app/loading'
 
 export default function Service({ service, loading, role }: any) {
   const ratings = [300, 100, 50, 35, 15]
+  console.log(service)
   return (
     <div>
       {!service ? (

@@ -6,37 +6,40 @@ import Image from 'next/image'
 
 const { Dragger } = Upload
 
+interface ImageObject {
+  img: string;
+}
+
 interface SVUploadProps {
-  images: string[]
-  setImages: React.Dispatch<React.SetStateAction<string[]>>
+  images: ImageObject[]
+  setImages: React.Dispatch<React.SetStateAction<ImageObject[]>>
 }
 
 const SVUpload = ({ images, setImages }: SVUploadProps) => {
-  const [uploading, setUploading] = useState(false) // Track uploading status
+  const [uploading, setUploading] = useState(false)
 
   const props: UploadProps = {
     name: 'img',
     multiple: true,
     action: 'http://localhost:8000/api/v1/uploads',
     method: 'POST',
-    showUploadList: false, // Disable default upload list
+    showUploadList: false,
     onChange(info) {
       const { status } = info.file
 
       if (status === 'uploading') {
-        setUploading(true) // Show loader when uploading starts
+        setUploading(true)
       }
 
       if (status === 'done') {
         const newImages = info.fileList
-          .map(item => item.response?.data)
-          .filter(img => !images.includes(img)) // Filter out duplicates
+          .map(item => ({ img: item.response?.data }))
+          .filter(imgObj => !images.some(existing => existing.img === imgObj.img))
 
         setImages(prev => [...prev, ...newImages])
-        setUploading(false) // Hide loader after upload
-        message.success(`File uploaded successfully.`)
+        setUploading(false)
       } else if (status === 'error') {
-        setUploading(false) // Hide loader on error
+        setUploading(false)
         message.error(`${info.file.name} file upload failed.`)
       }
     },
@@ -45,8 +48,8 @@ const SVUpload = ({ images, setImages }: SVUploadProps) => {
     },
   }
 
-  const handleDelete = (img: any) => {
-    setImages(images.filter(image => image !== img)) // Remove selected image
+  const handleDelete = (imgToDelete: ImageObject) => {
+    setImages(images.filter(image => image.img !== imgToDelete.img))
   }
 
   return (
@@ -77,7 +80,7 @@ const SVUpload = ({ images, setImages }: SVUploadProps) => {
           marginTop: '16px',
         }}
       >
-        {images.map((img, index) => (
+        {images.map((imgObj, index) => (
           <div
             key={index}
             style={{
@@ -91,14 +94,14 @@ const SVUpload = ({ images, setImages }: SVUploadProps) => {
             }}
           >
             <Image
-               src={typeof img === 'string' ? img : (img as { img: string })?.img}
+              src={imgObj.img}
               alt={`Uploaded ${index}`}
               width={80}
               height={80}
               className="object-cover rounded-md border border-gray-300"
             />
             <div
-              onClick={() => handleDelete(img)}
+              onClick={() => handleDelete(imgObj)}
               style={{
                 position: 'absolute',
                 top: '4px',
