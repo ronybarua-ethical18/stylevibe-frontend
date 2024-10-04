@@ -9,8 +9,9 @@ import {
 } from '@stripe/react-stripe-js'
 import SVButton from '../SVButton'
 import { useCreatePaymentIntentMutation } from '@/redux/api/stripe'
-import { CheckCircleOutlined, CopyOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined, CopyOutlined } from '@ant-design/icons'
 import Link from 'next/link'
+import { useCreateBookingMutation } from '@/redux/api/bookings'
 
 const stripePromise = loadStripe(
   'pk_test_51PnMRKBfR7AXQAHn19WtEzjkCGuPKG8BmMHFqZap098kURuMhn8wuXiEEL1tg8m0QU0bryWuH3iy8ztpR3Du6hrK00BmbdnBcg',
@@ -20,15 +21,28 @@ const PaymentForm = ({
   paymentIntentId,
   clientSecret,
   handleClose,
+  serviceDate,
+  serviceStartTime,
+  processingFees,
+  totalAmount,
+  service,
 }: {
   paymentIntentId: string | null
   clientSecret: string | null
   handleClose: () => void
+  serviceDate: string
+  serviceStartTime: string
+  processingFees: number
+  totalAmount: number
+  service: any
 }) => {
   const [isProcessing, setIsProcessing] = useState(false)
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const stripe = useStripe()
   const elements = useElements()
+  const [createBooking] = useCreateBookingMutation()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -40,31 +54,49 @@ const PaymentForm = ({
 
     if (submitError) {
       setIsProcessing(false)
+      setErrorMessage(submitError.message || 'An error occurred during submission.')
+      setIsSuccess(false)
+      setIsModalVisible(true)
       return
     }
 
-    const result = await stripe.confirmPayment({
-      elements,
-      clientSecret: clientSecret as string,
-      redirect: 'if_required',
-    })
-
-    if (result.error) {
-      console.log(result.error.message)
-      notification.error({
-        message: 'Payment Failed',
-        description: result.error.message,
+    try {
+      const result = await stripe.confirmPayment({
+        elements,
+        clientSecret: clientSecret as string,
+        redirect: 'if_required',
       })
-    } else {
-      // Payment succeeded, show success modal
-      setIsSuccessModalVisible(true)
+
+      if (result.error) {
+        setErrorMessage(result.error.message || 'Payment failed.')
+        setIsSuccess(false)
+      } else {
+        const bookingData = {
+          serviceDate: serviceDate,
+          serviceStartTime: serviceStartTime,
+          processingFees: processingFees,
+          totalAmount: totalAmount,
+          serviceId: service._id,
+          sellerId: service.seller,
+          shop: service.shop,
+          stripePaymentIntentId: paymentIntentId,
+          paymentMethod: 'card',
+        }
+
+        const response = await createBooking(bookingData).unwrap()
+        if (response) {
+          setIsSuccess(true)
+        }
+      }
+    } catch (error: any) {
+      setErrorMessage(error.data?.message || 'Booking creation failed.')
+      setIsSuccess(false)
+    } finally {
+      setIsProcessing(false)
+      setIsModalVisible(true)
       handleClose()
     }
-
-    setIsProcessing(false)
   }
-
-  console.log('paymentIntentId', paymentIntentId)
 
   const copyToClipboard = () => {
     if (paymentIntentId) {
@@ -81,17 +113,23 @@ const PaymentForm = ({
       <form onSubmit={handleSubmit}>
         <PaymentElement />
         <SVButton
-          title="Pay"
+          title={isProcessing ? 'Processing...' : 'Pay'}
           loading={isProcessing}
-          style={{ background: '#4d3ca3', width: '100%', marginTop: '20px' }}
+          disabled={isProcessing}
+          style={{ 
+            background: isProcessing ? '#a9a9a9' : '#4d3ca3', 
+            width: '100%', 
+            marginTop: '20px',
+            cursor: isProcessing ? 'not-allowed' : 'pointer'
+          }}
           htmlType="submit"
         />
       </form>
       <Modal
         title={null}
-        visible={isSuccessModalVisible}
-        onOk={() => setIsSuccessModalVisible(false)}
-        onCancel={() => setIsSuccessModalVisible(false)}
+        visible={isModalVisible}
+        onOk={() => setIsModalVisible(false)}
+        onCancel={() => setIsModalVisible(false)}
         footer={null}
         width={650}
         bodyStyle={{
@@ -104,81 +142,123 @@ const PaymentForm = ({
         }}
         centered
       >
-        <CheckCircleOutlined
-          style={{ fontSize: '64px', color: '#52c41a', marginBottom: '24px' }}
-        />
-        <h2 style={{ fontSize: '28px', marginBottom: '16px' }}>
-          Payment Successful!
-        </h2>
-        <p
-          style={{
-            fontSize: '18px',
-            marginBottom: '24px',
-            textAlign: 'center',
-          }}
-        >
-          Your payment was processed successfully. Thank you for your purchase!
-        </p>
-        <div
-          style={{
-            padding: '12px 16px',
-            borderRadius: '8px',
-            marginBottom: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            maxWidth: '400px',
-          }}
-          className="bg-gray-50"
-        >
-          <div>
-            <p style={{ fontSize: '14px', color: '#888', margin: '0 0 4px' }}>
-              Payment Intent ID
+        {isSuccess ? (
+          <>
+            <CheckCircleOutlined
+              style={{ fontSize: '64px', color: '#52c41a', marginBottom: '24px' }}
+            />
+            <h2 style={{ fontSize: '28px', marginBottom: '16px' }}>
+              Payment Successful!
+            </h2>
+            <p
+              style={{
+                fontSize: '18px',
+                marginBottom: '24px',
+                textAlign: 'center',
+              }}
+            >
+              Your payment was processed successfully. Thank you for your purchase!
             </p>
-            <p style={{ fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
-              {paymentIntentId}
+            <div
+              style={{
+                padding: '12px 16px',
+                borderRadius: '8px',
+                marginBottom: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                maxWidth: '400px',
+              }}
+              className="bg-gray-50"
+            >
+              <div>
+                <p style={{ fontSize: '14px', color: '#888', margin: '0 0 4px' }}>
+                  Payment Intent ID
+                </p>
+                <p style={{ fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
+                  {paymentIntentId}
+                </p>
+              </div>
+              <CopyOutlined
+                style={{ fontSize: '20px', color: '#4d3ca3', cursor: 'pointer' }}
+                onClick={copyToClipboard}
+              />
+            </div>
+            <p
+              style={{
+                marginBottom: '24px',
+                textAlign: 'center',
+              }}
+              className="text-center text-gray-500 font-light text-sm"
+            >
+              Visit your dashboard to manage your services or request a refund.
             </p>
-          </div>
-          <CopyOutlined
-            style={{ fontSize: '20px', color: '#4d3ca3', cursor: 'pointer' }}
-            onClick={copyToClipboard}
-          />
-        </div>
-        <p
-          style={{
-            marginBottom: '24px',
-            textAlign: 'center',
-          }}
-          className="text-center text-gray-500 font-light text-sm"
-        >
-          Visit your dashboard to manage your services or request a refund.
-        </p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
-          <Link href="/customer/dashboard">
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
+              <Link href="/customer/dashboard">
+                <SVButton
+                  title="Go to Dashboard"
+                  style={{
+                    background: '#4d3ca3',
+                    width: '200px',
+                    height: '40px',
+                    fontSize: '16px',
+                  }}
+                />
+              </Link>
+              <SVButton
+                title="Close"
+                style={{
+                  background: '#ffffff',
+                  color: '#4d3ca3',
+                  border: '1px solid #4d3ca3',
+                  width: '200px',
+                  height: '40px',
+                  fontSize: '16px',
+                }}
+                onClick={() => setIsModalVisible(false)}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <CloseCircleOutlined
+              style={{ fontSize: '64px', color: '#ff4d4f', marginBottom: '24px' }}
+            />
+            <h2 style={{ fontSize: '28px', marginBottom: '16px' }}>
+              Payment Failed
+            </h2>
+            <p
+              style={{
+                fontSize: '18px',
+                marginBottom: '24px',
+                textAlign: 'center',
+              }}
+            >
+              We're sorry, but something went wrong with your payment. Please try again later.
+            </p>
+            <p
+              style={{
+                fontSize: '16px',
+                marginBottom: '24px',
+                textAlign: 'center',
+                color: '#ff4d4f',
+              }}
+            >
+              Error: {errorMessage}
+            </p>
             <SVButton
-              title="Go to Dashboard"
+              title="Close"
               style={{
                 background: '#4d3ca3',
                 width: '200px',
                 height: '40px',
                 fontSize: '16px',
               }}
+              onClick={() => setIsModalVisible(false)}
             />
-          </Link>
-          <SVButton
-            title="Close"
-            style={{
-              background: '#ffffff',
-              color: '#4d3ca3',
-              border: '1px solid #4d3ca3',
-              width: '200px',
-              height: '40px',
-              fontSize: '16px',
-            }}
-            onClick={() => setIsSuccessModalVisible(false)}
-          />
-        </div>
+          </>
+        )}
       </Modal>
     </>
   )
@@ -189,11 +269,15 @@ const PaymentWrapper = ({
   processingFees,
   totalAmount,
   handleClose,
+  serviceDate,
+  serviceStartTime,
 }: {
   service: any
   processingFees: number
   totalAmount: number
   handleClose: () => void
+  serviceDate: string
+  serviceStartTime: string
 }) => {
   const [createPaymentIntent, { isLoading }] = useCreatePaymentIntentMutation()
   const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -277,6 +361,11 @@ const PaymentWrapper = ({
               paymentIntentId={paymentIntentId}
               clientSecret={clientSecret}
               handleClose={handleClose}
+              serviceDate={serviceDate}
+              serviceStartTime={serviceStartTime}
+              processingFees={processingFees}
+              totalAmount={totalAmount}
+              service={service}
             />
           </Col>
         </Row>

@@ -7,6 +7,7 @@ import SVBookingDetails from './SVBookingDetails'
 import PaymentWrapper from '../Forms/PaymentForm'
 import SVStepper from './SVStepper'
 import { BiArrowBack } from 'react-icons/bi'
+import moment from 'moment'
 
 const SVBookingConfirmationModal = ({
   width,
@@ -19,7 +20,8 @@ const SVBookingConfirmationModal = ({
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(!open)
 
-  const [selectedDate, setSelectedDate] = useState('')
+  // Update the default date to use UTC
+  const [selectedDate, setSelectedDate] = useState(moment.utc().format('YYYY-MM-DD'))
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<{
     _id: string
     startTime: string
@@ -70,6 +72,8 @@ const SVBookingConfirmationModal = ({
           processingFees={processingFees}
           totalAmount={totalAmount}
           handleClose={handleClose}
+          serviceDate={selectedDate}
+          serviceStartTime={selectedTimeSlots?.startTime || ''}
         />
       ),
     },

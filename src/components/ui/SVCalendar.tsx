@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { useState } from 'react'
 import { Calendar, Col, Row, Tooltip, Typography } from 'antd'
 import type { Dayjs } from 'dayjs'
@@ -184,6 +185,7 @@ const SVCalendar = ({
           <Tooltip
             color="#fff"
             placement="top"
+            key={item?._id}
             title={
               <div className="flex flex-col items-center justify-center w-full">
                 <div className="flex flex-col items-center justify-center w-full">
