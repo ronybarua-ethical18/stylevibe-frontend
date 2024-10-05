@@ -39,7 +39,7 @@ const serviceApi = baseApi.injectEndpoints({
     updateService: build.mutation({
       query: ({ id, data }) => ({
         url: `/services/${id}`,
-        method: 'PUT',
+        method: 'PATCH',
         data: data,
       }),
       invalidatesTags: [tagTypes.SERVICES],

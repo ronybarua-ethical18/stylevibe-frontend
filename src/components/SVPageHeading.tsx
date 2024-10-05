@@ -35,7 +35,7 @@ export default function SVPageHeading({
             {numberOfItems}
           </div>
         </div>
-        <h4>{pageSubTitle}</h4>
+        <h4 className='font-light'>{pageSubTitle}</h4>
       </div>
       {modalTitle && buttonTitle && (
         <SVModal

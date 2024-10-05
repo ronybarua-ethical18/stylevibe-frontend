@@ -2,7 +2,7 @@
 
 import SVPageHeading from '@/components/SVPageHeading'
 import SVBreadCrumb from '@/components/ui/SVBreadCrumb'
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import SVPagination from '../ui/SVPagination'
 import SVServiceTabs from './components/SVServiceTabs'
 import { SegmentedValue } from 'antd/es/segmented'
@@ -14,23 +14,26 @@ import {
 import { getQueryParams } from '@/utils/getQueryParams'
 import SVStatusChip from '../SVStatusChip'
 import { transformingText } from '@/utils/transformingText'
-import { IoEyeOutline, IoTrashOutline } from 'react-icons/io5'
+import { IoEyeOutline } from 'react-icons/io5'
 import SVModal from '../ui/SVModal'
-import {  useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { getUserInfo } from '@/services/auth.service'
 import { getBreadcrumbItems } from '@/utils/getBreadcumItems'
 import SVConfirmationModal from '../ui/SVConfirmationModal'
 import { useDispatch } from 'react-redux'
+import { showModal } from '@/redux/slices/globalSlice'
+import { LiaEdit } from 'react-icons/lia'
 
 export default function Services() {
-  const [activeTab, setActiveTab] = React.useState<SegmentedValue>('1')
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const [pageNumber, setPageNumber] = React.useState(1)
-  const [limit, setLimit] = React.useState(10)
-  const [selectedRecord, setSelectedRecord] = React.useState<any>(null) // State to manage selected record for modal
+  const [activeTab, setActiveTab] = useState<SegmentedValue>('1')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [pageNumber, setPageNumber] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [selectedRecord, setSelectedRecord] = useState<any>(null)
   const userDetails: any = getUserInfo()
 
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const handlePageChange = (page: number, pageSize: number) => {
     setPageNumber(page)
@@ -59,6 +62,11 @@ export default function Services() {
     }
   }
 
+  const handleEditClick = useCallback((record: any) => {
+    setSelectedRecord(record)
+    dispatch(showModal(true))
+  }, [dispatch])
+
   const columns = [
     {
       title: 'Service name',
@@ -83,7 +91,7 @@ export default function Services() {
     {
       title: 'Price',
       dataIndex: 'price',
-      render: (price: number) => `$${price.toFixed(2)}`,
+      render: (price: number) => `$${price?.toFixed(2)}`,
     },
     {
       title: 'Shop name',
@@ -112,14 +120,10 @@ export default function Services() {
               className="mr-2 text-xl cursor-pointer"
               onClick={() => router.push(`/${userDetails?.role}/services/${record?._id}`)}
             />
-            <div onClick={() => setSelectedRecord(record)}>
-              <SVModal
-                width="800px"
-                data={selectedRecord} // Use selectedRecord for modal data
-                setSelectedRecord={setSelectedRecord}
-                
-              />
-            </div>
+            <LiaEdit
+              className="mr-2 text-xl cursor-pointer"
+              onClick={() => handleEditClick(record)}
+            />
             <SVConfirmationModal
               buttonTitle={isDeleting ? 'Processing...' : 'Confirm'}
               item={record}
@@ -132,14 +136,12 @@ export default function Services() {
     },
   ]
 
- 
-
   return (
     <div>
-      <SVBreadCrumb items={getBreadcrumbItems( 'services')} />
+      <SVBreadCrumb items={getBreadcrumbItems('services')} />
       <SVPageHeading
         pageTitle="Services"
-        pageSubTitle=""
+        pageSubTitle="See your active and inactive services and make changes"
         numberOfItems={`${services?.meta?.total || 0} services`}
         modalTitle="Create service"
         buttonTitle="Create service"
@@ -161,6 +163,13 @@ export default function Services() {
           total={services?.meta?.total}
         />
       </div>
+      {selectedRecord && (
+        <div className='visibility: hidden'><SVModal
+        width="800px"
+        data={selectedRecord}
+        setSelectedRecord={setSelectedRecord}
+      /></div>
+      )}
     </div>
   )
 }

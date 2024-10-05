@@ -7,7 +7,10 @@ import { SERVICE_CATEGORIES, SERVICE_SUB_CATEGORIES } from '@/constants/options'
 import FormTextArea from '../Forms/FormTextArea'
 import SVUplaod from '../ui/SVUpload'
 import { SubmitHandler } from 'react-hook-form'
-import { useCreateServiceMutation } from '@/redux/api/services'
+import {
+  useCreateServiceMutation,
+  useUpdateServiceMutation,
+} from '@/redux/api/services'
 import { useDispatch } from 'react-redux'
 import { closeModal } from '@/redux/slices/globalSlice'
 
@@ -21,11 +24,14 @@ type FormValues = {
 }
 
 export default function CreateService({ savedData }: any) {
-  const [images, setImages] = useState<{ img: string }[]>([])
+  const [images, setImages] = useState<{ img: string }[]>(
+    savedData?.images || [],
+  )
   const [createService] = useCreateServiceMutation()
   const dispatch = useDispatch()
 
   const [incomingData, setIncomingData] = useState(savedData || {})
+  const [updateService] = useUpdateServiceMutation()
 
   useEffect(() => {
     setIncomingData(savedData || {})
@@ -35,15 +41,26 @@ export default function CreateService({ savedData }: any) {
 
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
-      await createService({
-        ...data,
-        price: Number(data?.price),
-        images,
-      }).unwrap()
+      if (savedData) {
+        await updateService({
+          id: savedData._id,
+          data: {
+            ...data,
+            price: Number(data?.price),
+            images,
+          },
+        }).unwrap()
+      } else {
+        await createService({
+          ...data,
+          price: Number(data?.price),
+          images,
+        }).unwrap()
+      }
 
       notification.success({
-        message: 'Service created successfully',
-        description: 'Your service has been created successfully.',
+        message: savedData ? 'Service updated successfully' : 'Service created successfully',
+        description: savedData ? 'Your service has been updated successfully.' : 'Your service has been created successfully.',
       })
       setImages([])
       dispatch(closeModal(false))
@@ -53,7 +70,9 @@ export default function CreateService({ savedData }: any) {
   }
   return (
     <div className="p-5 bg-white">
-      <h1 className="text-center text-2xl">Create Service</h1>
+      <h1 className="text-center text-2xl">
+        {savedData ? 'Edit Service' : 'Create Service'}
+      </h1>
       <div className="mt-5">
         <Form submitHandler={onSubmit}>
           <Row gutter={24}>
@@ -108,7 +127,7 @@ export default function CreateService({ savedData }: any) {
           </Row>
           <div className="flex justify-end mt-7">
             <Button htmlType="submit" type="primary" className="text-right">
-              Submit
+              {savedData ? 'Update' : 'Submit'}
             </Button>
           </div>
         </Form>

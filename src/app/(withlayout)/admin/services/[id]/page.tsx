@@ -20,7 +20,7 @@ export default async function SingleService({ params }: any) {
 
   return (
     <>
-      <Service service={data} />
+      <Service service={data?.data} />
     </>
   )
 }

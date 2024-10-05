@@ -12,6 +12,7 @@ import {
 import { LiaEdit } from 'react-icons/lia'
 import { usePathname } from 'next/navigation'
 import CreateService from '../Services/CreateService'
+import ServiceStatusUpdate from '../Services/ServiceStatusUpdate'
 
 interface IModal {
   modalTitle?: string
@@ -32,30 +33,33 @@ const SVModal = ({
   const dispatch = useDispatch()
   const pathname = usePathname()
   const adminPath = pathname === '/admin/services'
-  
+  const sellerPath = pathname === '/seller/services'
 
   const renderContent = (): any => {
-    if (pathname === '/seller/services' || data) {
-      if(data){
-        return <CreateService savedData={data} />
-      }
-      return <CreateService  />
+    if (sellerPath) {
+      return data ? <CreateService savedData={data} /> : <CreateService />
+    } else if (adminPath) {
+      return (
+        <ServiceStatusUpdate 
+          serviceId={data?._id} 
+          serviceName={data?.name}
+          onClose={() => {
+            setSelectedRecord(null)
+            dispatch(closeModal(false))
+          }}
+        />
+      )
     } else {
-      return <>Different modal content</>
+      return <>Unsupported path</>
     }
   }
 
   return (
     <div>
-      {adminPath && buttonTitle === "Create service" ? <></>:buttonTitle ? (
+      {adminPath && buttonTitle === "Create service" ? <></>:buttonTitle && (
         <SVButton
           type="primary"
           title={buttonTitle}
-          onClick={() => dispatch(showModal(true))}
-        />
-      ) : (
-        <LiaEdit
-          className="text-xl cursor-pointer"
           onClick={() => dispatch(showModal(true))}
         />
       )}

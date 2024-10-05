@@ -18,6 +18,7 @@ type SelectFieldProps = {
   defaultValue?: SelectOptions;
   handleChange?: (el: string) => void;
   mode?: "multiple" | "tags" | undefined
+  required?: boolean
 };
 
 const FormSelectField = ({
@@ -29,7 +30,8 @@ const FormSelectField = ({
   label,
   defaultValue,
   handleChange,
-  mode
+  mode,
+  required
 }: SelectFieldProps) => {
   const { control } = useFormContext();
 
