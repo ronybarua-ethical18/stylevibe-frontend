@@ -1,5 +1,3 @@
-'use client'
-
 import Bookings from '@/components/Bookings'
 import React from 'react'
 

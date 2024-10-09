@@ -55,6 +55,8 @@ const SVBookingsTabs = ({
     setSearchTerm(term)
   }
 
+  console.log("bookings loading", bookingsLoading)
+
   return (
     <SharedTabs
       items={items}

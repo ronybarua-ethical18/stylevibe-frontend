@@ -6,6 +6,10 @@ import { FaUsers } from 'react-icons/fa6'
 import { LiaBlogSolid } from "react-icons/lia";
 import { GrServices } from 'react-icons/gr'
 import { MdOutlineQuestionAnswer } from "react-icons/md";
+import { TbTransactionRupee } from "react-icons/tb";
+import { VscSearchStop } from "react-icons/vsc";
+
+
 
 
 import type { MenuProps } from 'antd'
@@ -20,14 +24,6 @@ export const sidebarItems = (role: string) => {
       key: 'profile',
       icon: <RxDashboard style={{ fontSize: '16px' }} />,
     },
-  ]
-
-  const sellerSidebarItems: MenuProps['items'] = [
-    {
-      label: <Link href={`/${role}/dashboard`}>Dashboard</Link>,
-      key: `${role}/dashboard`,
-      icon: <TbBrandBooking style={{ fontSize: '16px' }} />,
-    },
     {
       label: <Link href={`/${role}/bookings`}>Bookings</Link>,
       key: `${role}/bookings`,
@@ -38,6 +34,20 @@ export const sidebarItems = (role: string) => {
       key: `${role}/services`,
       icon: <GrServices style={{ fontSize: '16px' }} />,
     },
+    {
+      label: <Link href={`/${role}/transactions`}>Transactions</Link>,
+      key: `${role}/transactions`,
+      icon:<TbTransactionRupee style={{ fontSize: '16px' }}/>,
+    },
+    {
+      label: <Link href={`/${role}/disputes`}>Disputes</Link>,
+      key: `${role}/disputes`,
+      icon:<VscSearchStop style={{ fontSize: '16px' }}/>,
+    },
+  ]
+
+  const sellerSidebarItems: MenuProps['items'] = [
+    ...defaultSidebarItems,
     {
       label: <Link href={`/${role}/customers`}>Customers</Link>,
       key: `${role}/customers`,

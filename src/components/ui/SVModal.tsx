@@ -13,6 +13,7 @@ import { LiaEdit } from 'react-icons/lia'
 import { usePathname } from 'next/navigation'
 import CreateService from '../Services/CreateService'
 import ServiceStatusUpdate from '../Services/ServiceStatusUpdate'
+import BookingStatusUpdate from '../Bookings/BookingStatusUpdate'
 
 interface IModal {
   modalTitle?: string
@@ -21,10 +22,12 @@ interface IModal {
   data?: any
   isOpen?: boolean
   setSelectedRecord?: any
+  bookingId?:any
 }
 
 const SVModal = ({
   buttonTitle,
+  bookingId,
   width,
   data,
   setSelectedRecord,
@@ -36,9 +39,9 @@ const SVModal = ({
   const sellerPath = pathname === '/seller/services'
 
   const renderContent = (): any => {
-    if (sellerPath) {
+    if (sellerPath && !bookingId) {
       return data ? <CreateService savedData={data} /> : <CreateService />
-    } else if (adminPath) {
+    } else if (adminPath && !bookingId) {
       return (
         <ServiceStatusUpdate 
           serviceId={data?._id} 
@@ -50,7 +53,15 @@ const SVModal = ({
         />
       )
     } else {
-      return <>Unsupported path</>
+      return <BookingStatusUpdate 
+      bookingId={bookingId} 
+      serviceName={data?.name}
+      onClose={() => {
+        setSelectedRecord(null)
+        dispatch(closeModal(false))
+      }}
+      
+      />
     }
   }
 

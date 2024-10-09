@@ -4,13 +4,8 @@ import SVPageHeading from '@/components/SVPageHeading'
 import SVBreadCrumb from '@/components/ui/SVBreadCrumb'
 import React, { useState, useCallback } from 'react'
 import SVPagination from '../ui/SVPagination'
-import SVServiceTabs from './components/SVServiceTabs'
 import { SegmentedValue } from 'antd/es/segmented'
 import useDebounce from '@/hooks/useDebounce'
-import {
-  useDeleteServiceMutation,
-  useGetServicesQuery,
-} from '@/redux/api/services'
 import { getQueryParams } from '@/utils/getQueryParams'
 import SVStatusChip from '../SVStatusChip'
 import { transformingText } from '@/utils/transformingText'
@@ -23,8 +18,10 @@ import SVConfirmationModal from '../ui/SVConfirmationModal'
 import { useDispatch } from 'react-redux'
 import { showModal } from '@/redux/slices/globalSlice'
 import { LiaEdit } from 'react-icons/lia'
+import SVTransactionTabs from './components/SVTransactionTabs'
+import { useGetTransactionsQuery } from '@/redux/api/transactions'
 
-export default function Services() {
+export default function Transactions() {
   const [activeTab, setActiveTab] = useState<SegmentedValue>('1')
   const [searchTerm, setSearchTerm] = useState('')
   const [pageNumber, setPageNumber] = useState(1)
@@ -41,68 +38,75 @@ export default function Services() {
   }
 
   const debouncedSearchTerm = useDebounce({ value: searchTerm, delay: 500 })
-  const [deleteService, { isLoading: isDeleting }] = useDeleteServiceMutation()
   const { query } = getQueryParams(
     pageNumber,
     limit,
     debouncedSearchTerm,
     activeTab,
+    'transactions'
   )
 
-  const { data: services, isLoading: servicesLoading } = useGetServicesQuery({
+  const { data: transactions, isLoading: transactionLoading } = useGetTransactionsQuery({
     ...query,
   })
-
-  const handleDelete = async (serviceId: any) => {
-    try {
-      await deleteService(serviceId).unwrap()
-      console.log('Service deleted successfully')
-    } catch (error) {
-      console.error('Failed to delete service:', error)
-    }
-  }
 
   const handleEditClick = useCallback((record: any) => {
     setSelectedRecord(record)
     dispatch(showModal(true))
   }, [dispatch])
 
-  console.log("servicesLoading", servicesLoading)
+  console.log("transactions", transactions)
 
   const columns = [
+    // {
+    //   title: 'Transaction ID',
+    //   render: function (data: any) {
+    //     return <>{data?.transactionId || "SVTA2345-43242342"}</>
+    //   },
+    // },
     {
-      title: 'Service name',
-      dataIndex: 'name',
-      render: (name: string, record: any) => (
-        <span
-          className="cursor-pointer"
-          onClick={() => router.push(`/${userDetails?.role}/services/${record?._id}`)}
-        >
-          {name}
-        </span>
-      ),
+      title: 'Payment Intent ID',
+      dataIndex: 'stripePaymentIntentId',
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
+      title: 'Booking ID',
+      render: function (data: any) {
+        return <>{data?.booking?.bookingId || "SVBA2345-43242342"}</>
+      }
     },
     {
-      title: 'Subcategory',
-      dataIndex: 'subCategory',
+      title: 'Service Name',
+      render: function (data: any) {
+        return <>{data?.service?.name || "SVBA2345-43242342"}</>
+      }
+    },
+    // {
+    //   title: 'Seller',
+    //   render: function (data: any) {
+    //     return <>{data?.seller?.email || "SVBA2345-43242342"}</>
+    //   },
+    // },
+    {
+      title: 'Customer',
+      render: function (data: any) {
+        return <>{data?.customer?.email || "N/A"}</>
+      },
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      render: (price: number) => `$${price?.toFixed(2)}`,
+      title: 'Payment Method',
+      dataIndex: 'paymentMethod',
     },
     {
-      title: 'Shop name',
-      render: (record: any) => record?.shop?.shopName,
+      title: 'Paid Amount',
+      dataIndex: 'amount',
     },
     {
-      title: 'Availability',
-      dataIndex: 'availability',
-      render: (availability: boolean) => (availability ? 'Available' : 'N/A'),
+      title: 'Application Fee',
+      dataIndex: 'applicationFee',
+    },
+    {
+      title: 'Processing Fee',
+      dataIndex: 'stripeProcessingFee',
     },
     {
       title: 'Status',
@@ -126,12 +130,12 @@ export default function Services() {
               className="mr-2 text-xl cursor-pointer"
               onClick={() => handleEditClick(record)}
             />
-            <SVConfirmationModal
+            {/* <SVConfirmationModal
               buttonTitle={isDeleting ? 'Processing...' : 'Confirm'}
               item={record}
               func={() => handleDelete(record._id)}
               isLoading={isDeleting}
-            />
+            /> */}
           </div>
         </div>
       ),
@@ -142,18 +146,15 @@ export default function Services() {
     <div>
       <SVBreadCrumb items={getBreadcrumbItems('services')} />
       <SVPageHeading
-        pageTitle="Services"
-        pageSubTitle="See your active and inactive services and make changes"
-        numberOfItems={`${services?.meta?.total || 0} services`}
-        modalTitle="Create service"
-        buttonTitle="Create service"
-        width="800px"
+        pageTitle="Transactions"
+        pageSubTitle="See your active and inactive transactions and make changes"
+        numberOfItems={`${transactions?.meta?.total || 0} transactions`}
       />
-      <SVServiceTabs
+      <SVTransactionTabs
         columns={columns}
         activeTab={activeTab}
-        services={services}
-        servicesLoading={servicesLoading}
+        transactions={transactions}
+        transactionsLoading={transactionLoading}
         setActiveTab={setActiveTab}
         setSearchTerm={setSearchTerm}
       />
@@ -162,7 +163,7 @@ export default function Services() {
         <SVPagination
           onPageChange={handlePageChange}
           defaultCurrent={1}
-          total={services?.meta?.total}
+          total={transactions?.meta?.total}
         />
       </div>
       {selectedRecord && (

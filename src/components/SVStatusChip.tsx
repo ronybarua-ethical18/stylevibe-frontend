@@ -21,7 +21,7 @@ export default function SVStatusChip({ status }: { status: string }) {
   };
 
   switch (status) {
-    case 'Pending':
+    case 'pending':
       return (
         <div style={{ ...commonStyles, background: '#fff7cf', color: '#eda006' }}>
           <div style={{ ...flexContainerStyles }}>

@@ -43,8 +43,8 @@ const SVBookingConfirmationModal = ({
     setCurrent(current - 1)
   }
 
-  const processingFees = (service?.price * 2.9) / 100 + 0.3
-  const totalAmount = processingFees + service?.price
+  const processingFees = Number(((service?.price * 2.9) / 100 + 0.3).toFixed(2))
+  const totalAmount = Number((processingFees + service?.price).toFixed(2))
 
   const steps = [
     {

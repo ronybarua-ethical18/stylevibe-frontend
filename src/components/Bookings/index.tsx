@@ -7,7 +7,7 @@ import SVDataTableWithUtils from '@/components/ui/SVDataTableWithUtils'
 import SVModal from '@/components/ui/SVModal'
 import { getBreadcrumbItems } from '@/utils/getBreadcumItems'
 import { transformingText } from '@/utils/transformingText'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import SVBookingsTabs from './SVBookingsTabs'
 import { SegmentedValue } from 'antd/es/segmented'
 import SVPagination from '../ui/SVPagination'
@@ -15,17 +15,22 @@ import useDebounce from '@/hooks/useDebounce'
 import { getQueryParams } from '@/utils/getQueryParams'
 import { useGetBookingsQuery } from '@/redux/api/bookings'
 import moment from 'moment'
+import SVConfirmationModal from '../ui/SVConfirmationModal'
+import { LiaEdit } from 'react-icons/lia'
+import { IoEyeOutline } from 'react-icons/io5'
+import { showModal } from '@/redux/slices/globalSlice'
+import { useDispatch } from 'react-redux'
 
 export default function Bookings() {
   const [activeTab, setActiveTab] = useState<SegmentedValue>('1')
   const [searchTerm, setSearchTerm] = useState('')
   const [pageNumber, setPageNumber] = useState(1)
   const [limit, setLimit] = useState(10)
-  // const [selectedRecord, setSelectedRecord] = useState<any>(null)
+  const [selectedRecord, setSelectedRecord] = useState<any>(null)
   // const userDetails: any = getUserInfo()
 
   // const router = useRouter()
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
   const handlePageChange = (page: number, pageSize: number) => {
     setPageNumber(page)
@@ -39,6 +44,7 @@ export default function Bookings() {
     limit,
     debouncedSearchTerm,
     activeTab,
+    'booking'
   )
 
   const { data: bookings, isLoading: bookingsLoading } = useGetBookingsQuery({
@@ -55,11 +61,18 @@ export default function Bookings() {
   //   }
   // }
 
-  // const handleEditClick = useCallback((record: any) => {
-  //   setSelectedRecord(record)
-  //   dispatch(showModal(true))
-  // }, [dispatch])
+  const handleEditClick = useCallback((record: any) => {
+    setSelectedRecord(record)
+    dispatch(showModal(true))
+  }, [dispatch])
   const columns = [
+    {
+      title: 'Booking ID',
+    //   dataIndex: 'name',
+         render: function (data: any) {
+        return <>{data?.bookingId || "SVBA2345-43242342"}</>
+      },
+    },
     {
       title: 'Service name',
     //   dataIndex: 'name',
@@ -107,12 +120,38 @@ export default function Bookings() {
     {
       title: 'Status',
       dataIndex: 'status',
+      align:"center",
       render: function (data: any) {
         const status = transformingText(data)
         return <SVStatusChip status={status} />
       },
     },
+    {
+      title: 'Action',
+      align: 'right',
+      render: (record: any) => (
+        <div className="flex justify-end">
+          <div className="flex align-baseline">
+            <IoEyeOutline
+              className="mr-2 text-xl cursor-pointer"
+              // onClick={() => router.push(`/${userDetails?.role}/services/${record?._id}`)}
+            />
+            <LiaEdit
+              className=" text-xl cursor-pointer"
+              onClick={() => handleEditClick(record)}
+            />
+            {/* <SVConfirmationModal
+              // buttonTitle={isDeleting ? 'Processing...' : 'Confirm'}
+              item={record}
+              // func={() => handleDelete(record._id)}
+              // isLoading={isDeleting}
+            /> */}
+          </div>
+        </div>
+      ),
+    },
   ]
+  console.log("bookings loading from root",bookingsLoading)
 
   return (
     <div>
@@ -138,6 +177,14 @@ export default function Bookings() {
           total={bookings?.meta?.total || 0}
         />
       </div>
+      {selectedRecord && (
+        <div className='visibility: hidden'><SVModal
+        bookingId={selectedRecord?._id}
+        width="800px"
+        data={selectedRecord?.serviceId}
+        setSelectedRecord={setSelectedRecord}
+      /></div>
+      )}
     </div>
   )
 }
