@@ -14,6 +14,8 @@ import { usePathname } from 'next/navigation'
 import CreateService from '../Services/CreateService'
 import ServiceStatusUpdate from '../Services/ServiceStatusUpdate'
 import BookingStatusUpdate from '../Bookings/BookingStatusUpdate'
+import SVTransactionDetails from '../Transactions/components/SVTransactionDetails'
+import { IoEyeOutline } from 'react-icons/io5'
 
 interface IModal {
   modalTitle?: string
@@ -22,7 +24,8 @@ interface IModal {
   data?: any
   isOpen?: boolean
   setSelectedRecord?: any
-  bookingId?:any
+  bookingId?: any
+  transaction?: any
 }
 
 const SVModal = ({
@@ -31,20 +34,24 @@ const SVModal = ({
   width,
   data,
   setSelectedRecord,
+  transaction,
 }: IModal): ReactNode => {
   const { isModalOpen } = useSelector(globalSelector)
   const dispatch = useDispatch()
   const pathname = usePathname()
-  const adminPath = pathname === '/admin/services'
-  const sellerPath = pathname === '/seller/services'
+  const adminServicePath = pathname === '/admin/services'
+  const sellerServicePath = pathname === '/seller/services'
+  const sellerTransactionPath = pathname === '/seller/transactions'
 
   const renderContent = (): any => {
-    if (sellerPath && !bookingId) {
+    if (sellerServicePath && !bookingId) {
       return data ? <CreateService savedData={data} /> : <CreateService />
-    } else if (adminPath && !bookingId) {
+    } else if (sellerTransactionPath && transaction) {
+      return <SVTransactionDetails transaction={transaction} />
+    } else if (adminServicePath && !bookingId) {
       return (
-        <ServiceStatusUpdate 
-          serviceId={data?._id} 
+        <ServiceStatusUpdate
+          serviceId={data?._id}
           serviceName={data?.name}
           onClose={() => {
             setSelectedRecord(null)
@@ -53,26 +60,36 @@ const SVModal = ({
         />
       )
     } else {
-      return <BookingStatusUpdate 
-      bookingId={bookingId} 
-      serviceName={data?.name}
-      onClose={() => {
-        setSelectedRecord(null)
-        dispatch(closeModal(false))
-      }}
-      
-      />
+      return (
+        <BookingStatusUpdate
+          bookingId={bookingId}
+          serviceName={data?.name}
+          onClose={() => {
+            setSelectedRecord(null)
+            dispatch(closeModal(false))
+          }}
+        />
+      )
     }
   }
 
   return (
     <div>
-      {adminPath && buttonTitle === "Create service" ? <></>:buttonTitle && (
-        <SVButton
-          type="primary"
-          title={buttonTitle}
+      {adminServicePath && buttonTitle === 'Create service' ? (
+        <></>
+      ) : transaction ? (
+        <IoEyeOutline
+          className="mr-2 text-xl cursor-pointer"
           onClick={() => dispatch(showModal(true))}
         />
+      ) : (
+        buttonTitle && (
+          <SVButton
+            type="primary"
+            title={buttonTitle}
+            onClick={() => dispatch(showModal(true))}
+          />
+        )
       )}
       <Modal
         width={width}
@@ -80,11 +97,11 @@ const SVModal = ({
         open={isModalOpen}
         footer={null}
         onCancel={() => {
-          setSelectedRecord(null)
+          setSelectedRecord(null) ?? null
           dispatch(closeModal(false))
         }}
         onClose={() => {
-          setSelectedRecord(null)
+          setSelectedRecord(null) ?? null
           dispatch(closeModal(false))
         }}
         maskStyle={{ background: 'rgba(0,0,0,0.09)' }}

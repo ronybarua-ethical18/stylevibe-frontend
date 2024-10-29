@@ -14,7 +14,6 @@ import SVModal from '../ui/SVModal'
 import { useRouter } from 'next/navigation'
 import { getUserInfo } from '@/services/auth.service'
 import { getBreadcrumbItems } from '@/utils/getBreadcumItems'
-import SVConfirmationModal from '../ui/SVConfirmationModal'
 import { useDispatch } from 'react-redux'
 import { showModal } from '@/redux/slices/globalSlice'
 import { LiaEdit } from 'react-icons/lia'
@@ -97,8 +96,8 @@ export default function Transactions() {
       dataIndex: 'paymentMethod',
     },
     {
-      title: 'Paid Amount',
-      dataIndex: 'amount',
+      title: 'Payout Amount',
+      dataIndex: 'sellerAmount',
     },
     {
       title: 'Application Fee',
@@ -124,18 +123,8 @@ export default function Transactions() {
           <div className="flex align-baseline">
             <IoEyeOutline
               className="mr-2 text-xl cursor-pointer"
-              onClick={() => router.push(`/${userDetails?.role}/services/${record?._id}`)}
+              // onClick={() => router.push(`/${userDetails?.role}/services/${record?._id}`)}
             />
-            <LiaEdit
-              className="mr-2 text-xl cursor-pointer"
-              onClick={() => handleEditClick(record)}
-            />
-            {/* <SVConfirmationModal
-              buttonTitle={isDeleting ? 'Processing...' : 'Confirm'}
-              item={record}
-              func={() => handleDelete(record._id)}
-              isLoading={isDeleting}
-            /> */}
           </div>
         </div>
       ),
