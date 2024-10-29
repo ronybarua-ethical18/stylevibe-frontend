@@ -20,7 +20,7 @@ export default function DashboardLayout({
     if(!userLoggedIn){
       router.push("/login")
     }
-  },[router])
+  },[router, userLoggedIn])
   return (
     <Layout>
       <Sidebar />

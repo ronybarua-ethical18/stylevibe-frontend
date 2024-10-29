@@ -289,7 +289,7 @@ const PaymentWrapper = ({
       try {
         const response = await createPaymentIntent({
           amount: totalAmount,
-          currency: 'usd',
+          currency: 'eur', 
           seller: service.seller,
         }).unwrap()
 

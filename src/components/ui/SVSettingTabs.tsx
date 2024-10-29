@@ -31,6 +31,8 @@ const SVSettingTabs = ({ userProfile }: any) => {
   const handleTabChange = (value: SegmentedValue) => {
     setActiveTab(value)
   }
+
+  console.log("user profile", userProfile)
   const renderContent = () => {
     return (
       <div className="p-5 h-full bg-white">
