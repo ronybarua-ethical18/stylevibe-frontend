@@ -1,6 +1,6 @@
-import HairImage from '@/assets/hair2.png'
-import Makeup from '@/assets/makeup2.png'
-import Skin from '@/assets/skin2.png'
+import HairImage from '../../public/hair2.png'
+import Makeup from '../../public/makeup2.png'
+import Skin from '../../public/skin2.png'
 
 export const dummyServices = [
   {

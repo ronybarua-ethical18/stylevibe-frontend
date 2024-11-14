@@ -15,7 +15,7 @@ const RatingBar = ({ ratings }: { ratings: any }) => {
   return (
     <div>
       {ratings.map((count: number, index: number) => (
-        <div className='flex'>
+        <div className='flex' key={index}>
           <span style={{ marginRight: 8, minWidth: 20 }}>{5 - index}</span>
           <Progress
             percent={calculatePercentage(count)}

@@ -1,19 +1,20 @@
 /* eslint-disable react/no-unescaped-entities */
 'use client'
-import { Button, Col, Input, Row, Select, message } from 'antd'
-import { signIn, useSession } from 'next-auth/react'
+
+import { Button, Col, Row, message } from 'antd'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Form from '@/components/Forms/Form'
 import FormInput from '@/components/Forms/FormInput'
 import { SubmitHandler } from 'react-hook-form'
 import SVCarousel from '@/components/ui/SVCarousel'
 import Image from 'next/image'
-import helloImage from '@/assets/hello.png'
+import helloImage from '../../../public/hello.png'
 import Link from 'next/link'
 import { useUserLoginMutation } from '@/redux/api/auth'
 import { isLoggedIn, storeUserInfo } from '@/services/auth.service'
-import GoogleIcon from '@/assets/google.png'
-import FacebookIcon from '@/assets/facebook.png'
+import GoogleIcon from '../../../public/google.png'
+import FacebookIcon from '../../../public/facebook.png'
 import { useEffect } from 'react'
 
 type FormValues = {
@@ -22,18 +23,13 @@ type FormValues = {
 }
 
 const LoginPage = () => {
-  const { data: session } = useSession()
   const router = useRouter()
   const [userLogin] = useUserLoginMutation()
 
-  // console.log(isLoggedIn())
 
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
-      console.log('data', data)
       const res = await userLogin(data).unwrap()
-      console.log(res)
-      // message.success(res?.message)
       if (res?.data?.accessToken) {
         router.push('/')
       }

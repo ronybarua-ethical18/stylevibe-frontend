@@ -4,7 +4,7 @@ import React, { ReactNode, useState } from 'react'
 import { Modal } from 'antd'
 import SVButton from '../SVButton'
 import Image from 'next/image'
-import ModalImage from '../../assets/modal.jpg'
+import ModalImage from '../../../public/modal.jpg'
 import { GrClose } from 'react-icons/gr'
 import Link from 'next/link'
 
@@ -68,7 +68,7 @@ const SVSignupConfirmationModal = ({
             For booking a service you need to create an account to our portal
           </h2>
           <h1 className="text-3xl font-medium text-center mt-5">
-            Let's get started
+            Let is get started
           </h1>
           <Link href="/login">
           <SVButton

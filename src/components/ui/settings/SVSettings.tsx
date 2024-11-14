@@ -30,7 +30,6 @@ function SVSettings() {
     }
   }, [success, router])
 
-  console.log('query params', success)
   return (
     <div>
       <SVBreadCrumb

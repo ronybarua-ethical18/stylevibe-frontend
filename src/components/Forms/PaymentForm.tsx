@@ -235,7 +235,7 @@ const PaymentForm = ({
                 textAlign: 'center',
               }}
             >
-              We're sorry, but something went wrong with your payment. Please try again later.
+              We are sorry, but something went wrong with your payment. Please try again later.
             </p>
             <p
               style={{
@@ -306,7 +306,7 @@ const PaymentWrapper = ({
 
   React.useEffect(() => {
     handlePaymentIntent()
-  }, [])
+  })
 
   if (!clientSecret) {
     return <div>Loading...</div>

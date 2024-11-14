@@ -5,7 +5,7 @@ import { dummyClientReviews } from '@/utils/dummyServices'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Image from 'next/image'
-import ClientImage from '@/assets/cli.png'
+import ClientImage from '../../../public/cli.png'
 import { Rate } from 'antd'
 
 export default function SVClientReview() {

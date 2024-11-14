@@ -67,8 +67,6 @@ export default function Services() {
     dispatch(showModal(true))
   }, [dispatch])
 
-  console.log("servicesLoading", servicesLoading)
-
   const columns = [
     {
       title: 'Service name',

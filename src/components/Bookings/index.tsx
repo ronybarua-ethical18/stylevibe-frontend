@@ -1,9 +1,8 @@
-'use client'
+"use client"
 
 import SVPageHeading from '@/components/SVPageHeading'
 import SVStatusChip from '@/components/SVStatusChip'
 import SVBreadCrumb from '@/components/ui/SVBreadCrumb'
-import SVDataTableWithUtils from '@/components/ui/SVDataTableWithUtils'
 import SVModal from '@/components/ui/SVModal'
 import { getBreadcrumbItems } from '@/utils/getBreadcumItems'
 import { transformingText } from '@/utils/transformingText'
@@ -15,7 +14,6 @@ import useDebounce from '@/hooks/useDebounce'
 import { getQueryParams } from '@/utils/getQueryParams'
 import { useGetBookingsQuery } from '@/redux/api/bookings'
 import moment from 'moment'
-import SVConfirmationModal from '../ui/SVConfirmationModal'
 import { LiaEdit } from 'react-icons/lia'
 import { IoEyeOutline } from 'react-icons/io5'
 import { showModal } from '@/redux/slices/globalSlice'

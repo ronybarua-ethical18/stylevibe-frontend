@@ -2,7 +2,7 @@ import React from 'react';
 import { Input, InputProps } from 'antd';
 
 interface CustomInputProps extends InputProps {
-  variant?: string;
+  variant?: 'outlined' | 'borderless' | 'filled';
 }
 
 const SVFilledInput: React.FC<CustomInputProps> = ({ variant, ...rest }) => {

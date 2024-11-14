@@ -1,15 +1,14 @@
 /** @type {import('next').NextConfig} */
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig = {
+  experimental: {
+    optimizePackageImports: ['react-icons'],
+    optimizeCss: true, // Merged experimental configurations
+  },
   images: {
-    // domains: [
-    //   'thebeardclub.com',
-    //   'cdn.shopify.com',
-    //   'theruggedbros.com',
-    //   'm.media-amazon.com',
-    //   'i.pinimg.com',
-    //   'u-send.s3.eu-west-2.amazonaws.com',
-    //   'stylecraze'
-    // ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,15 +21,10 @@ const nextConfig = {
     ],
   },
   webpack(config) {
-    config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib'
-
-    return config
+    config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib';
+    return config;
   },
-  // Add these configurations:
   transpilePackages: ['@ant-design', 'antd'],
-  experimental: {
-    optimizeCss: true, // This is still experimental
-  },
-}
+};
 
-module.exports = nextConfig
+module.exports = withBundleAnalyzer(nextConfig);

@@ -1,5 +1,5 @@
 import React from 'react'
-import HappyClient from '@/assets/client.png'
+import HappyClient from '../../../public/client.png'
 import Image from 'next/image'
 import { CountUp } from 'use-count-up'
 

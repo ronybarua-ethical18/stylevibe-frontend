@@ -5,9 +5,9 @@ import SVCard from './SVCard'
 import { Col, Row } from 'antd'
 import { dummyServices, serviceCategories } from '@/utils/dummyServices'
 import Image from 'next/image'
-import HairImage from '@/assets/hair1.png'
-import Makeup from '@/assets/makeup1.png'
-import Skin from '@/assets/skin1.png'
+import HairImage from '../../../public/hair1.png'
+import Makeup from '../../../public/makeup1.png'
+import Skin from '../../../public/skin1.png'
 
 export default function SVTypesOfServices() {
   const [active, setActive] = useState(2)

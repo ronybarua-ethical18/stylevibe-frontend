@@ -1,8 +1,8 @@
 import React from 'react'
 import SVSectionTitle from '../SVSectionTitle'
-import Search from '@/assets/search.png'
-import Book from '@/assets/book.png'
-import Enjoy from '@/assets/enjoy.png'
+import Search from '../../../public/search.png'
+import Book from '../../../public/book.png'
+import Enjoy from '../../../public/enjoy.png'
 import Image from 'next/image'
 
 export default function SVHowItWorks() {

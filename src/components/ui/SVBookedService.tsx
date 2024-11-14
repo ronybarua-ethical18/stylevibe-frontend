@@ -7,7 +7,7 @@ export default function SVBookedService({ service }: any) {
   return (
     <div className="relative rounded-xl mt-4">
       <div className="mt-1 flex w-full items-center">
-        <img
+        <Image
           src={service?.images[0]?.img}
           alt="service image"
           style={{

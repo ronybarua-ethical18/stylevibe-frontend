@@ -6,9 +6,9 @@ import React from 'react'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import imgOne from '@/assets/1.png'
-import imgTwo from '@/assets/2.png'
-import imgThree from '@/assets/3.png'
+import imgOne from '../../../public/1.png'
+import imgTwo from '../../../public/2.png'
+import imgThree from '../../../public/3.png'
 
 
 export default function SVCarousel() {
