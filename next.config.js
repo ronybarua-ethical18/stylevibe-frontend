@@ -1,13 +1,15 @@
 /** @type {import('next').NextConfig} */
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: false, // Temporarily disabled to check if it’s causing the issue
 });
 
 const nextConfig = {
-  experimental: {
-    optimizePackageImports: ['react-icons'],
-    optimizeCss: true, // Merged experimental configurations
-  },
+  // Experimental configurations temporarily commented out to test for issues
+  // experimental: {
+  //   optimizePackageImports: ['react-icons'],
+  //   optimizeCss: true,
+  // },
+
   images: {
     remotePatterns: [
       {
@@ -20,11 +22,19 @@ const nextConfig = {
       },
     ],
   },
+
   webpack(config) {
-    config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib';
+    // Temporarily commenting out custom alias for testing
+    // config.resolve.alias['@ant-design/cssinjs'] = '@ant-design/cssinjs/lib';
+    
+    // Adding logging to identify potential issues
+    console.log("Running Webpack Configuration");
+
     return config;
   },
-  transpilePackages: ['@ant-design', 'antd'],
+
+  // Temporarily comment out transpilePackages to test for issues
+  // transpilePackages: ['@ant-design', 'antd'],
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
